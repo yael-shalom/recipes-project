@@ -16,15 +16,13 @@ exports.getAllRecipes = async (req, res, next) => {
     page ??= 1
     perPage ??= 3
     try {
-        console.log(req.user);
-        
         const query = [
             { name: new RegExp(search), isPrivate: false }
         ];
+
         if (req.user) {
             query.push({ 'user._id': req.user.user_id , isPrivate: true });
         }
-
 
         const allRecipes = await Recipes.find({ $or: query })
             //  .skip((page - 1) * perPage)
@@ -41,7 +39,7 @@ exports.getAllRecipes = async (req, res, next) => {
 //#
 exports.getRecipeByCode = async (req, res, next) => {
     const id = req.params.id;
-    console.log('id==', id);
+
     if (mongoose.Types.ObjectId.isValid(id)) {
         try {
             const recipeById = await Recipes.findById(id, { __v: false })
@@ -65,7 +63,6 @@ exports.getRecipesByUser = async (req, res, next) => {
     const id = req.params.userId;
     try {
         const userRecipe = await Recipes.find({ 'user._id': id }).select('-__v');
-        console.log('id=', id, 'user==', userRecipe);
         return res.json(userRecipe).status(200);
     } catch (error) {
         next({ message: error.message, status: 404 })
@@ -76,7 +73,7 @@ exports.getRecipesByUser = async (req, res, next) => {
 
 exports.getRecipesByPreparationTime = async (req, res, next) => {
     const { preparationTime } = req.params;
-    console.log("preparationTime==", preparationTime);
+
     try {
         const recipeByPreaperationTime = await Recipes.find({ preparationTime: preparationTime }).select('-__v')
         return res.json(recipeByPreaperationTime).status(201);
@@ -87,63 +84,38 @@ exports.getRecipesByPreparationTime = async (req, res, next) => {
 
 
 exports.addRecipe = async (req, res, next) => {
-    console.log('Request Body:', req.body);
-    console.log(req.body.constructor);
-    console.log(req.body.prototype, constructor);
-
-    console.log(typeof (req.body));
-
-    // console.log("categories");
-    // console.log(categories);
-    // console.log(typeof categories);
-
-
     upload(req, res, async (err) => {
         let { categories } = req.body;
-        console.log(typeof (categories));
 
+        
         if (typeof (categories) === "string")
             categories = [categories]
 
         if (err) {
             if (err instanceof multer.MulterError) {
-                // A Multer error occurred when uploading.
-                // console.log('req file', req.file);
-                // console.log(req.body);
                 return res.status(400).json({ message: err });
             } else {
                 // An unknown error occurred when uploading.
                 return res.status(500).json({ message: err });
             }
         }
-        console.log('='.repeat(50));
-
-        // console.log('Request Body:', req.body);
-        // console.log('Request File:', req.file);
 
         try {
             if (req.user.role == 'admin' || req.user.role == "user" || req.user.role == "registered user") {
-                // console.log("req.file\n", req.body.file);
 
                 if (req.file) {
-                    // console.log(req.file);
                     req.body.imagUrl = req.file.filename;
                 }
 
                 const recipe = new Recipes(req.body);
                 const user = await User.findById(req.user.user_id)
                 recipe.user = { name: user.username, _id: user._id }
-                console.log('recipe.user', recipe.user);
                 
                 await recipe.save();
 
-                // console.log(categories);
-
                 if (categories) {
                     for (const element of categories) {
-                        console.log('element =', element);
                         const cat = await Categories.findOne({ description: element });
-                        console.log('cat=', cat);
                         if (cat) {
                             cat.recipes.push(recipe);
                             await cat.save();
@@ -186,19 +158,14 @@ exports.addRecipe = async (req, res, next) => {
 exports.updateRecipes = async (req, res, next) => {
     upload(req, res, async (error) => {
         let { categories } = req.body;
-        console.log(typeof (categories));
 
         if (typeof (categories) === "string")
             categories = [categories]
 
         if (error) {
             if (err instanceof multer.MulterError) {
-                // A Multer error occurred when uploading.
-                console.log('req file', req.file);
-                console.log(req.body);
                 return res.status(400).json({ message: err });
             } else {
-                // An unknown error occurred when uploading.
                 return res.status(500).json({ message: err });
             }
         }
@@ -214,7 +181,6 @@ exports.updateRecipes = async (req, res, next) => {
                 if (!prevRecipe)
                     return next({ message: 'recipe not found' })
                 if (req.file) {
-                    console.log(req.file);
                     req.body.imagUrl = req.file.filename
                 }
 
@@ -258,7 +224,7 @@ exports.updateRecipes = async (req, res, next) => {
                     }
                     if (cat) {
                         let RecipeIndex = cat.recipes.findIndex(x => x._id == prevRecipe._id)
-                        console.log('RecipeIndex', RecipeIndex);
+
                         cat.recipes[RecipeIndex] = {
                             name: updatedRecipe.name,
                             imagUrl: updatedRecipe.imagUrl,
@@ -278,7 +244,6 @@ exports.updateRecipes = async (req, res, next) => {
 
             }
         } catch (error) {
-            console.log(error);
             next({ message: error.message })
         }
 
@@ -302,8 +267,6 @@ exports.deleteRecipe = async (req, res, next) => {
 
                 const cat = await Categories.findOne({ description: element });
                 if (cat) {
-                    console.log('cat= ', cat);
-                    console.log("cat.recipes", cat.recipes);
                     if (cat.recipes.length == 1) {
                         await Categories.findByIdAndDelete(cat._id)
                     }
@@ -331,10 +294,6 @@ const storage = multer.diskStorage({
         cb(null, './images'); // Directory where files will be stored
     },
     filename: (req, file, cb) => {
-        console.log('Date.now() + file.originalname');
-
-        console.log(Date.now() + file.originalname);
-
         cb(null, Date.now() + file.originalname);
     }
 });

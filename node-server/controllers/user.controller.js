@@ -6,9 +6,9 @@ exports.signUp = async (req, res, next) => {
     //    const {username,email,password,role,address}=req.body;
     const { username, email, password, address } = req.body;
     role = 'registered user'
-    const ExistUser = await User.findOne({ email: email })
-    console.log('ExistUser', ExistUser);
-    if (ExistUser)
+    const existUser = await User.findOne({ email: email })
+
+    if (existUser)
         return next({ message: 'cant insert exist user', status: 409 });
 
     const AllUsers = await User.find();
@@ -38,8 +38,7 @@ exports.signIn = async (req, res, next) => {
 
     const { password, email } = req.body;
     const user = await User.findOne({ email })
-    console.log(email, password);
-    console.log('user=', user);
+
     if (user) {
         bcrypt.compare(password, user.password, (err, same) => {
             if (err) {
@@ -70,15 +69,10 @@ exports.getAllUsers = async (req, res, next) => {
         user.forEach(element => {
             element.password = '****'
         });
-        console.log('user==', user);
+
         return res.json(user);
     } catch (error) {
-        console.log(next);
         next({ message: error.message, status: 401 })
     }
 
 }
-
-
-
-

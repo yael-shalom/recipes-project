@@ -10,7 +10,6 @@ exports.userAuth = (req, res, next) => {
             next({ message: 'no promission to invoke this function', status: 403 })
         next()//go the the router middlewares
     } catch (error) {
-        console.log('error', error);
         next({ message: error, status: 401 })
     }
 
@@ -28,7 +27,6 @@ exports.getAuth = (req, res, next) => {
             next({ message: 'no promission to invoke this function', status: 403 })
         next()//go the the router middlewares
     } catch (error) {
-        console.log('error', error);
         next()
     }
 

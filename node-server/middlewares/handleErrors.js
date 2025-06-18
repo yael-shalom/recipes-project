@@ -2,8 +2,6 @@ exports.pageNotFound=(req,res,next)=>{
     const error=new Error('page is not found');
     error.status=404;
     next(error);
-    console.log('error', error);
-
 }
 
 
