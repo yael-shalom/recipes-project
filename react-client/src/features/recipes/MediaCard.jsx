@@ -37,7 +37,7 @@ export default function MediaCard({ recipe }) {
         <CardMedia
           sx={{ height: 140 }}
           title={recipe.name}
-          image={`http://localhost:5000/images/${recipe.imagUrl}`}
+          image={`${import.meta.env.VITE_API_URL}/images/${recipe.imagUrl}`}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'center' }}>

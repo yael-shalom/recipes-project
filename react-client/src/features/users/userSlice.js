@@ -4,7 +4,7 @@ import { getAllRecipes } from "../recipes/recipeSlice";
 // import { getAllRecipes } from "../recipes/recipeSlice";
 
 const getTokenExpiration = (token) => {
-    const payload = token.split('.')[1]; // החלק השני של ה-JWT
+    const payload = token.split(`.`)[1]; // החלק השני של ה-JWT
     const decodedPayload = JSON.parse(atob(payload)); // המר מ-base64url ל-JSON
     const expirationTime = decodedPayload.exp; // קח את תאריך התוקף
     const expirationDate = new Date().getTime() + expirationTime * 1000; // זמן פג תוקף
@@ -13,9 +13,9 @@ const getTokenExpiration = (token) => {
 };
 
 export const addUser = createAsyncThunk("user-add", async (user, { dispatch }) => {
-    const res = await fetch('http://localhost:5000/users/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/users/signup`, {
+        method: `POST`,
+        headers: { 'Content-Type': `application/json` },
         body: JSON.stringify(user)
     })
 
@@ -32,9 +32,9 @@ export const addUser = createAsyncThunk("user-add", async (user, { dispatch }) =
 
 export const login = createAsyncThunk("user-login", async (user, { dispatch }) => {
     try {
-        const res = await fetch('http://localhost:5000/users/signin', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/signin`, {
+            method: `POST`,
+            headers: { 'Content-Type': `application/json` },
             body: JSON.stringify(user)
         });
 
@@ -60,7 +60,7 @@ export const logout = createAsyncThunk("user-logout", async (user, { dispatch })
 // const dispatch = useDispatch()
 
 const userSlice = createSlice({
-    name: 'users',
+    name: `users`,
     initialState: {
         currentUser: null,
         allUsers: [],
@@ -72,15 +72,15 @@ const userSlice = createSlice({
         },
         setUser(state, action) {
             if (action.payload) {
-                localStorage.setItem('currentUser', JSON.stringify(action.payload));
+                localStorage.setItem(`currentUser`, JSON.stringify(action.payload));
             } else {
-                localStorage.removeItem('currentUser');
+                localStorage.removeItem(`currentUser`);
             }
 
             state.currentUser = action.payload;
         },
         // getUserFromLocal(state, action) {
-        //     const currentUser = localStorage.getItem('currentUser');
+        //     const currentUser = localStorage.getItem(`currentUser`);
         //     state.currentUser = currentUser ? JSON.parse(currentUser) : null;
         // }
         // updateUser(state, action) {
@@ -96,7 +96,7 @@ const userSlice = createSlice({
         builder.addCase(addUser.fulfilled, (state, action) => {
             state.allUsers = [...state.allUsers, action.payload]
             state.status = "fulfilled"
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+            const currentUser = JSON.parse(localStorage.getItem(`currentUser`))
             // if(state.currentUser?._id != currentUser._id)
             //     dispatch(getAllRecipes)
             state.currentUser = currentUser
@@ -109,7 +109,7 @@ const userSlice = createSlice({
         builder.addCase(login.fulfilled, (state, action) => {
             state.allUsers = [...state.allUsers, action.payload]
             state.status = "fulfilled"
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'))
+            const currentUser = JSON.parse(localStorage.getItem(`currentUser`))
             // if(state.currentUser?._id != currentUser._id)
             //     dispatch(getAllRecipes)
             state.currentUser = currentUser

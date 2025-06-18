@@ -39,7 +39,7 @@ const ShowRecipe = () => {
 			}}>
 			<Grid2>
 				<PrintIcon className='print-icon' onClick={() => { window.print(); }} sx={{ cursor: "pointer", position: "fixed", left: "15px", top: '20px', zIndex: '1000' }} />
-				<div className="overlay" style={{ backgroundImage: `url(http://localhost:5000/images/${recipe.imagUrl})`, height: height }}></div>
+				<div className="overlay" style={{ backgroundImage: `url(${import.meta.env.VITE_API_URL}/images/${recipe.imagUrl})`, height: height }}></div>
 				<div ref={headerRef}>
 					<h1>{recipe.name}</h1>
 					<p className='description'>{recipe.description}</p>
