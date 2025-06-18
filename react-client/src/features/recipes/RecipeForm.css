@@ -1,0 +1,25 @@
+.uploaded-image {
+    transition: opacity 0.3s ease;
+}
+
+.uploaded-image:hover {
+    opacity: 0.7;
+    /* התבהרות בעת ריחוף */
+}
+
+.remove-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    display: none;
+    background-color: 'white';
+    border-radius: '50%';
+    padding: '2px';
+    font-size: '16px';
+}
+
+.uploaded-image:hover+.remove-icon {
+    display: block;
+    /* הצגת ה-X בעת ריחוף */
+}

@@ -1,0 +1,49 @@
+.recipe-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: left;
+}
+
+.recipe-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.recipe-details {
+    margin-bottom: 20px;
+}
+
+.recipe-details p {
+    margin: 5px 0;
+}
+
+.recipe-section {
+    margin-bottom: 20px;
+}
+
+.recipe-section h2 {
+    margin-bottom: 10px;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* מרווח בין הפריטים */
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+}
+
+.list-item span {
+    margin-left: 10px;
+}
+
+.list-item span.completed {
+    text-decoration: line-through;
+    color: gray;
+}

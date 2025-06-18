@@ -1,0 +1,45 @@
+.recipes {
+    
+    /* עיצוב הכותרת */
+    h1 {
+        color: var(--primary-color);
+        /* כותרת בגווני אפרסק כהה */
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 36px;
+        /* גודל כותרת גדול יותר */
+    }
+    
+    /* עיצוב רשימת המתכונים */
+    ul {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* עיצוב הכרטיסים */
+    li.card {
+        border-radius: 8px;
+        padding: 20px;
+        width: 220px;
+        transition: transform 0.2s;
+    }
+
+    li {
+        margin: 15px;
+        width: 230px;
+    }
+
+    /* אפקט ריחוף על הכרטיסים */
+    li.card:hover {
+        transform: translateY(-5px);
+    }
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+
+}
