@@ -9,7 +9,7 @@ import Header from './Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllRecipes } from '../recipes/recipeSlice'
 import { useEffect } from 'react'
-import Login from '../users/login'
+import Login from '../users/Login'
 import { getAllCategories } from '../categories/categorySlice'
 
 function App() {
