@@ -37,7 +37,7 @@ export default function SingleRecipe({ recipe }) {
         <CardMedia
           sx={{ height: 140,  backgroundSize: !recipe.imagUrl ? "contain" : "cover" }}
           title={recipe.name}
-          image={recipe.imagUrl ? `${import.meta.env.VITE_API_URL}/images/${recipe.imagUrl}` : '../public/default-image.svg'}
+          image={recipe.imagUrl ? `${import.meta.env.VITE_API_URL}/images/${recipe.imagUrl}` : 'default-image.svg'}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'center' }}>
