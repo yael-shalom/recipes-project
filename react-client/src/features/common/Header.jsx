@@ -36,10 +36,7 @@ const Header = () => {
     };
 
     const searchByName = (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            navigateWithFilters({ search: event.target.value });
-        }
+        navigateWithFilters({ search: event.target.value });
     };
 
     const filterByDifficulty = (dif) => {
@@ -57,7 +54,7 @@ const Header = () => {
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="מה תרצו להכין היום?"
                     inputProps={{ 'aria-label': 'search recipe' }}
-                    onKeyDownCapture={(event) => searchByName(event)}
+                    onChange={(event) => searchByName(event)}
                 />
                 <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
                     <SearchIcon />
@@ -72,7 +69,7 @@ const Header = () => {
             </div>
             <div className="difficulty flex-center">
                 {
-                    difficulty.map(dif => <Chip key={dif} className='chip' variant="outlined" label={dif} sx={{ cursor: "pointer",  backgroundColor: dif == params.get('difficulty') && 'var(--primary-color)' }}
+                    difficulty.map(dif => <Chip key={dif} className='chip' variant="outlined" label={dif} sx={{ cursor: "pointer", backgroundColor: dif == params.get('difficulty') && 'var(--primary-color)' }}
                         clickable onClick={() => { filterByDifficulty(dif) }}></Chip>)
                 }
             </div>
