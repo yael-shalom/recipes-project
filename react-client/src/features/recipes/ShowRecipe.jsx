@@ -42,7 +42,7 @@ const ShowRecipe = () => {
 				<div className="overlay" style={{ backgroundImage: `url(${import.meta.env.VITE_API_URL}/images/${recipe.imagUrl})`, height: height }}></div>
 				<div ref={headerRef}>
 					<h1>{recipe.name}</h1>
-					<p className='description'>{recipe.description}</p>
+					<pre className='description'>{recipe.description}</pre>
 					<Grid2 className="containCat" size={12}>
 						{recipe.categories.map((cat) => <Chip key={cat} label={`${cat}`} variant="outlined" sx={{ marginInline: '5px' }} />)}
 						<Chip label={`${recipe.preparationTime} דקות`} variant="outlined" sx={{ marginInline: '5px' }} />
