@@ -10,6 +10,7 @@ const Home = () => {
 
     return (
         <>
+            <h1>חדש באתר</h1>
             <Recipes initialRecipes={lastRecipes} />
         </>
     );

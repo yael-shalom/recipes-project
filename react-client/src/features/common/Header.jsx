@@ -14,38 +14,38 @@ const Header = () => {
         const query = new URLSearchParams(params).toString();
         return query ? `?${query}` : '';
     };
-    
+
     const navigateWithFilters = (newParams) => {
         const search = params.get('search')
         const category = params.get('category')
         const difficulty = params.get('difficulty')
-        let currentParams = { }
-        if(search)
+        let currentParams = {}
+        if (search)
             currentParams.search = search
-        if(category)
+        if (category)
             currentParams.category = category
-        if(difficulty)
+        if (difficulty)
             currentParams.difficulty = difficulty
-        currentParams = { ...currentParams, ...newParams}
+        currentParams = { ...currentParams, ...newParams }
         navigate(`/recipes${buildQueryParams(currentParams)}`);
     };
-    
+
     const filterByCategory = (category) => {
 
         navigateWithFilters({ category: category.description });
     };
-    
+
     const searchByName = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             navigateWithFilters({ search: event.target.value });
         }
     };
-    
+
     const filterByDifficulty = (dif) => {
         navigateWithFilters({ difficulty: dif });
     };
-    
+
 
     return (<>
         <div className="homeText">
@@ -65,13 +65,15 @@ const Header = () => {
             </Paper>
 
             <div className="categories flex-center">{categoriesList.map(cat => {
-                return <Chip className='chip' key={cat._id} label={cat.description} sx={{ cursor: "pointer" }} clickable onClick={() => { filterByCategory(cat) }}></Chip>;
+                return <Chip className='chip' key={cat._id} label={cat.description} sx={{ cursor: "pointer", backgroundColor: cat.description == params.get('category') && 'var(--primary-color)' }}
+                    clickable onClick={() => { filterByCategory(cat) }}></Chip>;
             })}
                 <Chip className='chip' label='ביטול סינון' sx={{ cursor: "pointer" }} clickable onClick={() => { navigate('/recipes') }}></Chip>
             </div>
             <div className="difficulty flex-center">
                 {
-                    difficulty.map(dif => <Chip key={dif} className='chip' variant="outlined" label={dif} sx={{ cursor: "pointer" }} clickable onClick={() => { filterByDifficulty(dif) }}></Chip>)
+                    difficulty.map(dif => <Chip key={dif} className='chip' variant="outlined" label={dif} sx={{ cursor: "pointer",  backgroundColor: dif == params.get('difficulty') && 'var(--primary-color)' }}
+                        clickable onClick={() => { filterByDifficulty(dif) }}></Chip>)
                 }
             </div>
         </div>

@@ -35,3 +35,10 @@ h1 {
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+.recipe-actions {
+    position: fixed;
+    left: 10px;
+    bottom: 10px;
+    /* width: 100px; */
+}

@@ -50,6 +50,7 @@ export default function RecipeForm({ onSubmit }) {
     form.layersArray = recipe.layersArray
     form.preparationInstruction = recipe.preparationInstruction
     form.isPrivate = recipe.isPrivate
+    // setFile(recipe.imagUrl)
   }
 
   const [form, setForm] = useState({
@@ -178,8 +179,8 @@ export default function RecipeForm({ onSubmit }) {
       }
       else
         dispatch(addRecipe(formData))
-      if(status == 'fulfilled')
-        navigate('/recipes')
+      if (status == 'fulfilled')
+        navigate(-1)
       setErrors({});
     }
   };
@@ -333,30 +334,20 @@ export default function RecipeForm({ onSubmit }) {
         )}
 
         {file && (
-          <div style={{ position: 'relative', marginTop: '16px' }}>
+          <Grid container className="image-container" style={{ marginTop: '16px' }} alignContent='center' justifyContent='right'>
             <img
               src={URL.createObjectURL(file)}
               alt="Uploaded"
               className="uploaded-image"
-              style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+              style={{ width: 'auto', height: '100%', objectFit: 'cover' }}
             />
             <IconButton
+              className="remove-icon"
               onClick={removeFile}
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                backgroundColor: 'white',
-                borderRadius: '50%',
-                '&:hover': {
-                  backgroundColor: '#ffcccc', // שינוי צבע בריחוף
-                },
-              }}
             >
               <CloseIcon />
             </IconButton>
-          </div>
+          </Grid>
         )}
 
         <Grid item xs={12}>

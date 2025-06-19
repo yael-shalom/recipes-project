@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import './Recipes.css';
 import GradientCircularProgress from '../common/GradientProgress'
 import { useParams } from 'react-router-dom';
-import MediaCard from './MediaCard';
+import SingleRecipe from './SingleRecipe';
 
 const Recipes = ({ initialRecipes }) => {
     const userId = useParams();
@@ -39,7 +39,7 @@ const Recipes = ({ initialRecipes }) => {
             {status == "loading..." && <GradientCircularProgress />}
 
             {status != "loading..." && recipesList?.length > 0 && (
-                <ul>{filteredRecipes.map(item => <li key={item._id}><MediaCard recipe={item} /></li>)}</ul>
+                <ul>{filteredRecipes.map(item => <li key={item._id}><SingleRecipe recipe={item} /></li>)}</ul>
             )}
 
             {status != "loading..." && recipesList?.length == 0 && <p style={{ textAlign: "center" }}>אין מתכונים...</p>}

@@ -23,17 +23,6 @@
     align-items: center;
 }
 
-/* input[type=search] {
-    box-sizing: content-box;
-    border-radius: 35px;
-    border: 1px solid white;
-    line-height: 3em;
-    display: inline-block;
-    padding: 0 20px 0 10px;
-    width: 75%;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-} */
-
 .chip {
     margin-inline-start: 5px !important;
 }
