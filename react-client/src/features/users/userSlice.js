@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getAllRecipes } from "../recipes/recipeSlice";
-// import { useDispatch } from "react-redux";
-// import { getAllRecipes } from "../recipes/recipeSlice";
 
 const getTokenExpiration = (token) => {
     const payload = token.split(`.`)[1]; // החלק השני של ה-JWT
@@ -24,47 +22,40 @@ export const addUser = createAsyncThunk("user-add", async (user, { dispatch }) =
     if (!res.ok)
         throw new Error(data);
 
-    const currentUser = { _id: data.user._id, token: data.token, tokenExpiration: getTokenExpiration(data.token) };
+    const currentUser = { ...data, tokenExpiration: getTokenExpiration(data.token) };
     dispatch(updateCurrentUser(currentUser));
 
     return data;
 });
 
 export const login = createAsyncThunk("user-login", async (user, { dispatch }) => {
-    try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/signin`, {
-            method: `POST`,
-            headers: { 'Content-Type': `application/json` },
-            body: JSON.stringify(user)
-        });
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/users/signin`, {
+        method: `POST`,
+        headers: { 'Content-Type': `application/json` },
+        body: JSON.stringify(user)
+    });
 
-        const data = await res.json();
+    const data = await res.json();
 
-        if (!res.ok)
-            throw new Error(data);
+    if (!res.ok)
+        throw new Error(data);
 
-        const currentUser = { _id: data._id, username: data.username, token: data.token, tokenExpiration: getTokenExpiration(data.token) };
-        dispatch(updateCurrentUser(currentUser));
+    const currentUser = { ...data, tokenExpiration: getTokenExpiration(data.token) };
+    dispatch(updateCurrentUser(currentUser));
 
-        return data
-    }
-    catch (error) {
-        throw error
-    }
+    return data;
 });
 
 export const logout = createAsyncThunk("user-logout", async (user, { dispatch }) => {
     dispatch(updateCurrentUser(null));
 });
 
-// const dispatch = useDispatch()
-
 const userSlice = createSlice({
     name: `users`,
     initialState: {
         currentUser: null,
-        allUsers: [],
-        status: null
+        status: null,
+        error: null
     },
     reducers: {
         setStatus(state, action) {
@@ -78,43 +69,23 @@ const userSlice = createSlice({
             }
 
             state.currentUser = action.payload;
-        },
-        // getUserFromLocal(state, action) {
-        //     const currentUser = localStorage.getItem(`currentUser`);
-        //     state.currentUser = currentUser ? JSON.parse(currentUser) : null;
-        // }
-        // updateUser(state, action) {
-        //     const i = state.allUsers.users.findIndex(r => r._id == action.payload._id)
-        //     state.allUsers.users.splice(i, 1)
-        //     state.allUsers.users.push(action.payload)
-        // },
-        // deleteUser(state, action) {
-        //     state.allUsers.users = state.allUsers.users.filter(user => user._id !== action.payload)
-        // }
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(addUser.fulfilled, (state, action) => {
-            state.allUsers = [...state.allUsers, action.payload]
             state.status = "fulfilled"
-            const currentUser = JSON.parse(localStorage.getItem(`currentUser`))
-            // if(state.currentUser?._id != currentUser._id)
-            //     dispatch(getAllRecipes)
-            state.currentUser = currentUser
         }).addCase(addUser.rejected, (state, action) => {
+            state.error = action.payload;
             state.status = "failed!!"
         }).addCase(addUser.pending, (state, action) => {
             state.status = "loading..."
         })
 
         builder.addCase(login.fulfilled, (state, action) => {
-            state.allUsers = [...state.allUsers, action.payload]
             state.status = "fulfilled"
-            const currentUser = JSON.parse(localStorage.getItem(`currentUser`))
-            // if(state.currentUser?._id != currentUser._id)
-            //     dispatch(getAllRecipes)
-            state.currentUser = currentUser
         }).addCase(login.rejected, (state, action) => {
-            state.status = "failed!!"
+            state.error = action.payload;
+            state.status = "failed!!";
         }).addCase(login.pending, (state, action) => {
             state.status = "loading..."
         })

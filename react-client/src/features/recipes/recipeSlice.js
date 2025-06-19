@@ -34,8 +34,6 @@ export const getRecipesByUser = createAsyncThunk("recipe-getByUser", async (id) 
 
 export const addRecipe = createAsyncThunk("recipe-add", async (formData) => {
     try {
-        // if(!checkTokenExpiration())
-        //     throw new Error(formData);
         const currentUser = JSON.parse(localStorage.getItem(`currentUser`));
         let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/addRecipe`, {
             method: `POST`,
@@ -80,7 +78,8 @@ const recipeSlice = createSlice({
     name: `recipes`,
     initialState: {
         allRecipes: [],
-        status: null
+        status: null,
+        error: null
     },
     reducers: {
     },
@@ -89,6 +88,7 @@ const recipeSlice = createSlice({
             state.allRecipes = action.payload
             state.status = "fulfilled"
         }).addCase(getAllRecipes.rejected, (state, action) => {
+            state.error = action.payload;
             state.status = "failed!!"
         }).addCase(getAllRecipes.pending, (state, action) => {
             state.status = "loading..."
@@ -99,6 +99,7 @@ const recipeSlice = createSlice({
             state.status = "fulfilled"
         }).addCase(getRecipesByUser.rejected, (state, action) => {
             state.allRecipes = [];
+            state.error = action.payload;
             state.status = "failed!!"
         }).addCase(getRecipesByUser.pending, (state, action) => {
             state.status = "loading..."
@@ -109,6 +110,7 @@ const recipeSlice = createSlice({
             state.status = "fulfilled"
         }).addCase(addRecipe.rejected, (state, action) => {
             state.allRecipes = [];
+            state.error = action.payload;
             state.status = "failed!!"
         }).addCase(addRecipe.pending, (state, action) => {
             state.status = "loading..."
@@ -119,6 +121,7 @@ const recipeSlice = createSlice({
             state.status = "fulfilled"
         }).addCase(deleteRecipe.rejected, (state, action) => {
             state.allRecipes = [];
+            state.error = action.payload;
             state.status = "failed!!"
         }).addCase(deleteRecipe.pending, (state, action) => {
             state.status = "loading..."
@@ -130,6 +133,7 @@ const recipeSlice = createSlice({
             state.allRecipes.push(action.payload)
             state.status = "fulfilled"
         }).addCase(updateRecipe.rejected, (state, action) => {
+            state.error = action.payload;
             state.status = "failed!!"
         }).addCase(updateRecipe.pending, (state, action) => {
             state.status = "loading..."

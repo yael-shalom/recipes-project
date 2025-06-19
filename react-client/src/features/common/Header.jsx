@@ -2,13 +2,13 @@ import { useSelector } from "react-redux";
 import { Autocomplete, Chip, Divider, IconButton, InputBase, Paper, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from "react-router-dom";
+import { difficulties } from "../recipes/recipesService";
 
 const Header = () => {
     const categoriesList = useSelector((state) => state.categories.allCategories);
 
     const navigate = useNavigate()
-    const params = new URLSearchParams(window.location.search);
-    const difficulty = ['קל', 'בינוני', 'קשה'];
+    const params = new URLSearchParams(location.hash.split('?')[1])
 
     const buildQueryParams = (params) => {
         const query = new URLSearchParams(params).toString();
@@ -31,7 +31,6 @@ const Header = () => {
     };
 
     const filterByCategory = (category) => {
-
         navigateWithFilters({ category: category.description });
     };
 
@@ -54,7 +53,7 @@ const Header = () => {
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="מה תרצו להכין היום?"
                     inputProps={{ 'aria-label': 'search recipe' }}
-                    onChange={(event) => searchByName(event)}
+                    onInput={(event) => searchByName(event)}
                 />
                 <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
                     <SearchIcon />
@@ -69,7 +68,7 @@ const Header = () => {
             </div>
             <div className="difficulty flex-center">
                 {
-                    difficulty.map(dif => <Chip key={dif} className='chip' variant="outlined" label={dif} sx={{ cursor: "pointer", backgroundColor: dif == params.get('difficulty') && 'var(--primary-color)' }}
+                    difficulties.map(dif => <Chip key={dif} className='chip' variant="outlined" label={dif} sx={{ cursor: "pointer", backgroundColor: dif == params.get('difficulty') && 'var(--primary-color)' }}
                         clickable onClick={() => { filterByDifficulty(dif) }}></Chip>)
                 }
             </div>

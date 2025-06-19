@@ -4,10 +4,11 @@ import './Recipes.css';
 import GradientCircularProgress from '../common/GradientProgress'
 import { useParams } from 'react-router-dom';
 import SingleRecipe from './SingleRecipe';
+import { getDifficulty } from './recipesService';
 
 const Recipes = ({ initialRecipes }) => {
     const userId = useParams();
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.hash.split('?')[1]);
     const [recipesList, setRecipesList] = useState(initialRecipes)
     const status = useSelector((state) => state.recipes.status);
     const search = params.get('search') ? params.get('search') : '';
@@ -16,13 +17,6 @@ const Recipes = ({ initialRecipes }) => {
     const hasDifficulty = difficulty ? true : false
     const hasCategory = category ? true : false
 
-    const getDifficulty = (diff) => {
-        if (diff == 5)
-            return 'קשה'
-        if (diff > 2 && diff < 5)
-            return 'בינוני'
-        return 'קל'
-    }
 
     useEffect(() => {
         if (userId.id != undefined) {
@@ -33,7 +27,7 @@ const Recipes = ({ initialRecipes }) => {
         }
     }, [userId])
 
-    const filteredRecipes = recipesList?.filter(rec => rec.name.includes(search) && (!hasCategory || rec.categories.includes(category)) && (!hasDifficulty || getDifficulty(rec) == difficulty));
+    const filteredRecipes = recipesList?.filter(rec => rec.name.includes(search) && (!hasCategory || rec.categories.includes(category)) && (!hasDifficulty || getDifficulty(rec.difficulty) == difficulty));
     return (<div className='recipes'>
         <div className='flex-col'>
             {status == "loading..." && <GradientCircularProgress />}

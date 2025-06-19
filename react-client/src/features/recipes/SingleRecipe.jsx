@@ -6,6 +6,7 @@ import { deleteRecipe } from './recipeSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import './SingleRecipe.css'
 import { Button, Chip } from '@mui/material';
+import { getDifficulty, minutesToHours } from './recipesService';
 
 export default function SingleRecipe({ recipe }) {
   const dispatch = useDispatch();
@@ -19,14 +20,6 @@ export default function SingleRecipe({ recipe }) {
   const editHandler = () => {
     navigate(`/update/${recipe._id}`);
   };
-
-  const difficulty = (diff) => {
-    if (diff == 5)
-      return 'קשה'
-    if (diff > 2 && diff < 5)
-      return 'בינוני'
-    return 'קל'
-  }
 
   return (
     <Card
@@ -45,8 +38,8 @@ export default function SingleRecipe({ recipe }) {
           </Typography>
           <Typography component='div' variant="body2" sx={{ color: 'text.secondary' }}>
             <div className="flex-row">
-              <Chip label={`${recipe.preparationTime} דקות`} variant="outlined" sx={{ marginInline: '5px' }} />
-              <Chip label={`${difficulty(recipe.difficulty)} `} variant="outlined" sx={{ marginInline: '5px' }} />
+              <Chip label={minutesToHours(recipe?.preparationTime)} variant="outlined" sx={{ marginInline: '5px' }} />
+              <Chip label={`${getDifficulty(recipe.difficulty)} `} variant="outlined" sx={{ marginInline: '5px' }} />
             </div>
           </Typography>
         </CardContent>

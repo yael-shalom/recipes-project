@@ -10,6 +10,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import { getAllRecipes } from './recipeSlice';
+import { getDifficulty, minutesToHours } from './recipesService';
 
 const ShowRecipe = () => {
 	const { id } = useParams();
@@ -39,12 +40,6 @@ const ShowRecipe = () => {
 		}
 	}, [recipe]);
 
-	const difficulty = (diff) => {
-		if (diff === 5) return 'קשה';
-		if (diff > 2 && diff < 5) return 'בינוני';
-		return 'קל';
-	};
-
 	const deleteHandler = () => {
 		dispatch(deleteRecipe(recipe._id));
 	};
@@ -68,15 +63,15 @@ const ShowRecipe = () => {
 	return (
 		<Grid2 container direction="column" className='show-recipe' sx={{ justifyContent: "center", alignItems: "center" }}>
 			<Grid2>
-				<PrintIcon className='print-icon' onClick={() => { window.print(); }} sx={{ cursor: "pointer", position: "fixed", left: "15px", top: '20px', zIndex: '1000' }} />
+				<PrintIcon className='no-print' onClick={() => { window.print(); }} sx={{ cursor: "pointer", position: "fixed", left: "15px", top: '20px', zIndex: '1000' }} />
 				<div className="overlay" style={{ backgroundImage: `url(${import.meta.env.VITE_API_URL}/images/${recipe?.imagUrl})`, height: height }}></div>
 				<div ref={headerRef}>
 					<h1>{recipe?.name}</h1>
 					<pre className='description'>{recipe?.description}</pre>
 					<Grid2 className="containCat" size={12}>
 						{recipe?.categories.map((cat) => <Chip key={cat} label={`${cat}`} variant="outlined" sx={{ marginInline: '5px' }} />)}
-						<Chip label={`${recipe?.preparationTime} דקות`} variant="outlined" sx={{ marginInline: '5px' }} />
-						<Chip label={`${difficulty(recipe?.difficulty)} `} variant="outlined" sx={{ marginInline: '5px' }} />
+						<Chip label={minutesToHours(recipe?.preparationTime)} variant="outlined" sx={{ marginInline: '5px' }} />
+						<Chip label={`${getDifficulty(recipe?.difficulty)} `} variant="outlined" sx={{ marginInline: '5px' }} />
 					</Grid2>
 				</div>
 			</Grid2>
@@ -112,8 +107,8 @@ const ShowRecipe = () => {
 				<pre style={{ fontWeight: "bold" }}>    <i>נוסף ע"י: {recipe?.user.name}</i></pre>
 				<p style={{ fontSize: '30px', textAlign: 'center', fontWeight: 'bold' }}>בתאבון!!!</p>
 				{recipe?.user._id === currentUser?._id && <Grid2 container alignItems='center' spacing={2} className="recipe-actions">
-					<DeleteIcon onClick={deleteHandler} sx={{ cursor: 'pointer' }} />
-					<EditNoteRoundedIcon onClick={editHandler} fontSize='large' sx={{ cursor: 'pointer', color: 'black' }} />
+					<DeleteIcon className='no-print' onClick={deleteHandler} sx={{ cursor: 'pointer' }} />
+					<EditNoteRoundedIcon className='no-print' onClick={editHandler} fontSize='large' sx={{ cursor: 'pointer', color: 'black' }} />
 				</Grid2>}
 			</Grid2>
 		</Grid2>

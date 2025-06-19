@@ -31,11 +31,13 @@ body {
 }
 
 @media print {
-    nav, button, .print-icon {
+    nav, button, .no-print {
         display: none !important;
     }
     .containCat {
         border-bottom: none !important;
     }
-    
+    * {
+        text-decoration: none !important;
+    }
 }

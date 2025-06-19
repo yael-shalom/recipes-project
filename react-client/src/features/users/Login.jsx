@@ -48,25 +48,23 @@ const Login = () => {
         mode: 'onTouched'
     });
 
-    const onSubmitLogin = (user) => {
-        dispatch(login(user))
-        navigate('/recipes')
-    }
-
     useEffect(() => {
         if (status === 'fulfilled') {
             dispatch(setStatus())
             dispatch(getAllRecipes())
-            navigate('/recipes')
+            navigate(-1)
         } else if (status === 'failed!!') {
             setCondition('register')
         }
     }, [status]);
+    
+
+    const onSubmitLogin = (user) => {
+        dispatch(login(user))
+    }
 
     const onSubmitRegister = (user) => {
         dispatch(addUser(user));
-        dispatch(getAllRecipes())
-        navigate('/recipes')
     }
 
     return (<>
