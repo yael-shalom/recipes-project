@@ -1,4 +1,4 @@
-const { Recipes } = require("../models/recipe.model")
+const { Recipes: Recipe } = require("../models/recipe.model")
 const { Categories } = require("../models/categories.model");
 const { default: mongoose } = require("mongoose");
 const multer = require('multer');
@@ -7,6 +7,7 @@ const { error, log } = require("console");
 const { query } = require("express");
 const { getAllUsers } = require("./user.controller");
 const { User } = require("../models/user.model");
+const { rename } = require("fs/promises");
 //#
 exports.getAllRecipes = async (req, res, next) => {
     // optional parameters - לא חובה
@@ -21,10 +22,10 @@ exports.getAllRecipes = async (req, res, next) => {
         ];
 
         if (req.user) {
-            query.push({ 'user._id': req.user.user_id , isPrivate: true });
+            query.push({ 'user._id': req.user.user_id, isPrivate: true });
         }
 
-        const allRecipes = await Recipes.find({ $or: query })
+        const allRecipes = await Recipe.find({ $or: query })
             //  .skip((page - 1) * perPage)
             //  .limit(perPage)
             .select('-__v');
@@ -42,7 +43,7 @@ exports.getRecipeByCode = async (req, res, next) => {
 
     if (mongoose.Types.ObjectId.isValid(id)) {
         try {
-            const recipeById = await Recipes.findById(id, { __v: false })
+            const recipeById = await Recipe.findById(id, { __v: false })
             res.json(recipeById).status(200);
         } catch (error) {
             next({ message: error.message })
@@ -62,7 +63,7 @@ exports.getRecipesByUser = async (req, res, next) => {
     //לבדוק הראשות שה למשתמש 
     const id = req.params.userId;
     try {
-        const userRecipe = await Recipes.find({ 'user._id': id }).select('-__v');
+        const userRecipe = await Recipe.find({ 'user._id': id }).select('-__v');
         return res.json(userRecipe).status(200);
     } catch (error) {
         next({ message: error.message, status: 404 })
@@ -75,8 +76,8 @@ exports.getRecipesByPreparationTime = async (req, res, next) => {
     const { preparationTime } = req.params;
 
     try {
-        const recipeByPreaperationTime = await Recipes.find({ preparationTime: preparationTime }).select('-__v')
-        return res.json(recipeByPreaperationTime).status(201);
+        const recipeByPreparationTime = await Recipe.find({ preparationTime: preparationTime }).select('-__v')
+        return res.json(recipeByPreparationTime).status(201);
     } catch (error) {
         next({ message: error.message, status: 404 })
     }
@@ -87,7 +88,7 @@ exports.addRecipe = async (req, res, next) => {
     upload(req, res, async (err) => {
         let { categories } = req.body;
 
-        
+
         if (typeof (categories) === "string")
             categories = [categories]
 
@@ -107,11 +108,17 @@ exports.addRecipe = async (req, res, next) => {
                     req.body.imagUrl = req.file.filename;
                 }
 
-                const recipe = new Recipes(req.body);
+                let recipe = new Recipe(req.body);
                 const user = await User.findById(req.user.user_id)
                 recipe.user = { name: user.username, _id: user._id }
-                
+
                 await recipe.save();
+
+                if (req.file) {
+                    const newPath = req.file.path.replace(req.file.filename, recipe._id)
+                    await rename(req.file.path, newPath);
+                    recipe = await Recipe.findByIdAndUpdate(recipe._id, { imagUrl: path.basename(newPath) }, { new: true });
+                }
 
                 if (categories) {
                     for (const element of categories) {
@@ -135,9 +142,7 @@ exports.addRecipe = async (req, res, next) => {
                             await mewCategory.save();
                         }
                     }
-
                 }
-
 
                 res.json(recipe).status(201);//created json
             }
@@ -164,7 +169,7 @@ exports.updateRecipes = async (req, res, next) => {
 
         if (error) {
             if (error instanceof multer.MulterError) {
-                    return next({ message: error, status: 400 });
+                return next({ message: error, status: 400 });
             } else {
                 return next({ message: error, status: 500 });
             }
@@ -177,14 +182,16 @@ exports.updateRecipes = async (req, res, next) => {
         try {
             if (req.user.role == 'admin' || req.user.role == 'user' || req.user.role == 'registered user') {
 
-                const prevRecipe = await Recipes.findById(id)
+                const prevRecipe = await Recipe.findById(id)
                 if (!prevRecipe)
                     return next({ message: 'recipe not found' })
                 if (req.file) {
-                    req.body.imagUrl = req.file.filename
+                    const newPath = req.file.path.replace(req.file.filename, prevRecipe._id)
+                    await rename(req.file.path, newPath);
+                    req.body.imagUrl = path.basename(newPath);
                 }
 
-                const updatedRecipe = await Recipes.findByIdAndUpdate(
+                const updatedRecipe = await Recipe.findByIdAndUpdate(
                     id,
                     { $set: req.body },
                     { new: true });
@@ -240,7 +247,7 @@ exports.updateRecipes = async (req, res, next) => {
                 return res.json(updatedRecipe)
             }
             else {
-                next({ message: ' only admin or registered user can add recepie ', status: 403 })
+                next({ message: ' only admin or registered user can add recipe ', status: 403 })
 
             }
         } catch (error) {
@@ -258,7 +265,7 @@ exports.deleteRecipe = async (req, res, next) => {
         next({ message: ' id is not valid' })
     try {
         if (req.user.role == 'admin' || req.user.role == 'registered user' || req.user.role == 'user') {
-            const rec = await Recipes.findById(id)
+            const rec = await Recipe.findById(id)
             if (!rec)
                 return next({ message: 'recipe not found' })
 
@@ -281,7 +288,7 @@ exports.deleteRecipe = async (req, res, next) => {
 
             }
 
-            await Recipes.findByIdAndDelete(id)
+            await Recipe.findByIdAndDelete(id)
             return res.status(204).send();
         }
     } catch (error) {
