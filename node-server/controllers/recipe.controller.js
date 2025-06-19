@@ -163,10 +163,10 @@ exports.updateRecipes = async (req, res, next) => {
             categories = [categories]
 
         if (error) {
-            if (err instanceof multer.MulterError) {
-                return res.status(400).json({ message: err });
+            if (error instanceof multer.MulterError) {
+                    return next({ message: error, status: 400 });
             } else {
-                return res.status(500).json({ message: err });
+                return next({ message: error, status: 500 });
             }
         }
 

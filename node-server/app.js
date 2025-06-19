@@ -1,4 +1,5 @@
-
+const fs = require('fs').promises;
+const path = require('path');
 const express = require('express')
 const morgan = require('morgan');
 const cors = require('cors');
@@ -18,6 +19,21 @@ app.use(cors());
 app.get('/', (req, res) => {
     res.send('welcome to recipe website')
 });
+
+app.use('/', async (req, res, next) => {
+    const dirPath = path.join(__dirname, 'images');
+
+    try {
+        // בדוק אם התיקייה קיימת
+        await fs.access(dirPath);
+    } catch {
+        // אם לא קיימת, צור אותה
+        await fs.mkdir(dirPath);
+    }
+
+    next(); // המשך לעבד את הבקשה
+});
+
 app.use('/images', express.static('images'));
 app.use('/users', userRouter);
 app.use('/recipes', recipesRouter);
