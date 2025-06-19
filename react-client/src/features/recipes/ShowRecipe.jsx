@@ -21,7 +21,6 @@ const ShowRecipe = () => {
 		setHeight(headerRef.current.offsetTop + headerRef.current.offsetHeight);
 	}, [])
 
-
 	const difficulty = (diff) => {
 		if (diff == 5)
 			return 'קשה'

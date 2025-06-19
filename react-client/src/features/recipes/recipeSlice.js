@@ -24,21 +24,12 @@ export const getAllRecipes = createAsyncThunk("recipe-getAll", async () => {
     if (!res.ok)
         throw new Error(data);
     return data;
-    // }
-    // catch (error) {
-    //     console.log(error);
-    // }
 })
 
 export const getRecipesByUser = createAsyncThunk("recipe-getByUser", async (id) => {
-    try {
-        let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/getRecipesByUser/` + id)
-        res = await res.json()
-        return res
-    }
-    catch (error) {
-        console.log(error);
-    }
+    let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/getRecipesByUser/` + id)
+    res = await res.json()
+    return res
 })
 
 export const addRecipe = createAsyncThunk("recipe-add", async (formData) => {
@@ -62,41 +53,27 @@ export const addRecipe = createAsyncThunk("recipe-add", async (formData) => {
 })
 
 export const updateRecipe = createAsyncThunk("recipe-update", async ({ formData, id }) => {
-    try {
-        // if(!checkTokenExpiration())
-        //     throw new Error(formData);
-        const currentUser = JSON.parse(localStorage.getItem(`currentUser`));
-        console.log(id);
-        let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/updateRecipes/${id}`, {
-            method: `PUT`,
-            headers: {
-                Authorization: `Bearer ` + currentUser.token
-            },
-            body: formData
-        })
-        res = await res.json()
-        return res;
-    }
-    catch (error) {
-        console.log(error);
-        throw error
-    }
+    const currentUser = JSON.parse(localStorage.getItem(`currentUser`));
+    let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/updateRecipes/${id}`, {
+        method: `PUT`,
+        headers: {
+            Authorization: `Bearer ` + currentUser.token
+        },
+        body: formData
+    })
+    res = await res.json()
+    return res;
 })
 
 export const deleteRecipe = createAsyncThunk("recipe-delete", async (id) => {
-    try {
-        const currentUser = JSON.parse(localStorage.getItem(`currentUser`));
-        let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/deleteRecipe/${id}`, {
-            method: `DELETE`,
-            headers: {
-                Authorization: `Bearer ` + currentUser.token
-            }
-        })
-        return id;
-    }
-    catch (error) {
-        console.log(error);
-    }
+    const currentUser = JSON.parse(localStorage.getItem(`currentUser`));
+    let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/deleteRecipe/${id}`, {
+        method: `DELETE`,
+        headers: {
+            Authorization: `Bearer ` + currentUser.token
+        }
+    })
+    return id;
 })
 
 const recipeSlice = createSlice({

@@ -1,14 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getAllCategories = createAsyncThunk("category-getAll", async () => {
-    try {
-        let res = await fetch(`${import.meta.env.VITE_API_URL}/categories/getallcategories`)
-        res = await res.json()
-        return res
-    }
-    catch (error) {
-        console.log(error);
-    }
+    let res = await fetch(`${import.meta.env.VITE_API_URL}/categories/getallcategories`)
+    res = await res.json()
+    return res
 })
 
 const categorySlice = createSlice({
@@ -18,7 +13,7 @@ const categorySlice = createSlice({
         status: null
     },
     reducers: {
-       
+
     },
     extraReducers: (builder) => {
         builder.addCase(getAllCategories.fulfilled, (state, action) => {

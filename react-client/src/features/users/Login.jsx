@@ -58,15 +58,12 @@ const Login = () => {
             dispatch(setStatus())
             dispatch(getAllRecipes())
             navigate('/recipes')
-            console.log('Login successful');
         } else if (status === 'failed!!') {
-            console.log('Login failed');
             setCondition('register')
         }
     }, [status]);
 
     const onSubmitRegister = (user) => {
-        console.log('register');
         dispatch(addUser(user));
         dispatch(getAllRecipes())
         navigate('/recipes')

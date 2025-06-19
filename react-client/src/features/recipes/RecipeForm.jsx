@@ -93,8 +93,6 @@ export default function RecipeForm({ onSubmit }) {
   const handleAddCategory = () => {
     const val = categoryInput.trim();
     if (val && !form.categories.includes(val)) {
-      console.log(val);
-
       setForm({ ...form, categories: [...form.categories, val] });
       setCategoryInput("");
     }
@@ -176,10 +174,7 @@ export default function RecipeForm({ onSubmit }) {
       if (file)
         formData.append('image', file)
       if (id) {
-        console.log(id.toString());
-
         dispatch(updateRecipe({ formData, id }))
-
       }
       else
         dispatch(addRecipe(formData))
