@@ -3,15 +3,15 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { Provider } from 'react-redux'
 import { store } from './features/common/store'
-import { HashRouter } from 'react-router-dom'
+import { HashRouter as Router } from 'react-router-dom'
 import App from './features/common/App'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <HashRouter>
+    <Router>
       <Provider store={store}>
         <App />
       </Provider>
-    </HashRouter>
+    </Router>
   </StrictMode>,
 )
