@@ -23,7 +23,7 @@ const cacheRtl = createCache({
 	stylisPlugins: [prefixer, rtlPlugin],
 });
 
-export default function RecipeForm({ onSubmit }) {
+export default function RecipeForm() {
 	const dispatch = useDispatch()
 	const categoriesList = useSelector((state) => state.categories.allCategories);
 	const recipes = useSelector((state) => state.recipes.allRecipes)
@@ -162,10 +162,9 @@ export default function RecipeForm({ onSubmit }) {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		if (validate()) {
-			onSubmit && onSubmit(form);
 			formData.append('name', form.name)
 			formData.append('description', form.description)
-			form.categories.map(cat => { formData.append('categories', cat) })
+			form.categories.forEach(cat => formData.append('categories', cat));
 			formData.append('preparationTime', form.preparationTime)
 			formData.append('difficulty', form.difficulty)
 			form.layersArray.forEach((layer, idx) => {
@@ -174,15 +173,17 @@ export default function RecipeForm({ onSubmit }) {
 					formData.append(`layersArray[${idx}][ingredients][${ingIdx}]`, ing);
 				});
 			});
-			form.preparationInstruction.map(prep => { formData.append('preparationInstruction', prep) })
+			form.preparationInstruction.forEach(prep => formData.append('preparationInstruction', prep))
 			formData.append('isPrivate', form.isPrivate)
+
 			if (file)
 				formData.append('image', file)
 			if (id) {
 				dispatch(updateRecipe({ formData, id }))
 			}
-			else
+			else {
 				dispatch(addRecipe(formData))
+			}
 			if (status == 'fulfilled')
 				navigate(-1)
 			setErrors({});
@@ -193,8 +194,7 @@ export default function RecipeForm({ onSubmit }) {
 		const response = await fetch(imageUrl);
 		const blob = await response.blob();
 		const file = new File([blob], "image.png", { type: blob.type });
-		console.log(file); // כאן את יכולה להשתמש בקובץ
-		return file
+		return file;
 	};
 
 	return (

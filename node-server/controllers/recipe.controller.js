@@ -47,7 +47,6 @@ exports.getRecipeByCode = async (req, res, next) => {
         } catch (error) {
             next({ message: error.message })
         }
-
     }
     else {
         next({ message: 'id is not valid ', status: 404 })
@@ -84,19 +83,18 @@ exports.getRecipesByPreparationTime = async (req, res, next) => {
 
 
 exports.addRecipe = async (req, res, next) => {
-    upload(req, res, async (err) => {
+    upload(req, res, async (error) => {
         let { categories } = req.body;
-
 
         if (typeof (categories) === "string")
             categories = [categories]
 
-        if (err) {
-            if (err instanceof multer.MulterError) {
-                return res.status(400).json({ message: err });
+
+        if (error) {
+            if (error instanceof multer.MulterError) {
+                return next({ message: error, status: 400 });
             } else {
-                // An unknown error occurred when uploading.
-                return res.status(500).json({ message: err });
+                return next({ message: error, status: 500 });
             }
         }
 
@@ -184,10 +182,13 @@ exports.updateRecipes = async (req, res, next) => {
                 const prevRecipe = await Recipe.findById(id)
                 if (!prevRecipe)
                     return next({ message: 'recipe not found' })
+                
                 if (req.file) {
                     const newPath = req.file.path.replace(req.file.filename, prevRecipe._id)
                     await fs.rename(req.file.path, newPath);
                     req.body.imagUrl = path.basename(newPath);
+                } else {
+                    req.body.imagUrl = null;
                 }
 
                 const updatedRecipe = await Recipe.findByIdAndUpdate(
