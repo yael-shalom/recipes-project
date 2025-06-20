@@ -3,11 +3,11 @@ const { Categories } = require("../models/categories.model");
 const { default: mongoose } = require("mongoose");
 const multer = require('multer');
 const path = require('path');
-const { error, log } = require("console");
-const { query } = require("express");
+const fs = require("fs/promises");
+const fileType = require('file-type');
 const { getAllUsers } = require("./user.controller");
 const { User } = require("../models/user.model");
-const { rename } = require("fs/promises");
+
 //#
 exports.getAllRecipes = async (req, res, next) => {
     // optional parameters - לא חובה
@@ -35,7 +35,6 @@ exports.getAllRecipes = async (req, res, next) => {
     }
 
 }
-
 
 //#
 exports.getRecipeByCode = async (req, res, next) => {
@@ -116,7 +115,7 @@ exports.addRecipe = async (req, res, next) => {
 
                 if (req.file) {
                     const newPath = req.file.path.replace(req.file.filename, recipe._id)
-                    await rename(req.file.path, newPath);
+                    await fs.rename(req.file.path, newPath);
                     recipe = await Recipe.findByIdAndUpdate(recipe._id, { imagUrl: path.basename(newPath) }, { new: true });
                 }
 
@@ -187,7 +186,7 @@ exports.updateRecipes = async (req, res, next) => {
                     return next({ message: 'recipe not found' })
                 if (req.file) {
                     const newPath = req.file.path.replace(req.file.filename, prevRecipe._id)
-                    await rename(req.file.path, newPath);
+                    await fs.rename(req.file.path, newPath);
                     req.body.imagUrl = path.basename(newPath);
                 }
 
@@ -306,15 +305,21 @@ const storage = multer.diskStorage({
 });
 const upload = multer({
     storage: storage,
-    fileFilter: (req, file, cb) => {
-        const filetypes = /jpeg|jpg|png|gif/;
-        const extname = filetypes.test(path.extname(Date.now() + file.originalname).toLowerCase());
-        const mimetype = filetypes.test(file.mimetype);
+    fileFilter: async (req, file, cb) => {
+        console.log(file);
 
-        if (mimetype && extname) {
+        if (!file || !file.path) {
             return cb(null, true);
-        } else {
-            cb('Error: Images only!');
         }
+
+        const filePath = file.path;
+        const fileBuffer = await fs.readFile(filePath); // קריאה אסינכרונית של הקובץ
+        const type = await fileType.fromBuffer(fileBuffer);
+
+        if (!type || !type.mime.startsWith('image/')) {
+            return cb('Uploaded file is not an image', false);
+        }
+
+        return cb(null, true);
     }
-}).single('image');  
+}).single('image');
