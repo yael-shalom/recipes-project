@@ -1,14 +1,16 @@
 import { useSelector } from "react-redux";
 import { Autocomplete, Chip, Divider, IconButton, InputBase, Paper, TextField } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { difficulties } from "../recipes/recipesService";
 
 const Header = () => {
     const categoriesList = useSelector((state) => state.categories.allCategories);
 
     const navigate = useNavigate()
-    const params = new URLSearchParams(location.hash.split('?')[1])
+    const location = useLocation();
+    const [params] = useSearchParams();
+
 
     const buildQueryParams = (params) => {
         const query = new URLSearchParams(params).toString();
@@ -27,7 +29,9 @@ const Header = () => {
         if (difficulty)
             currentParams.difficulty = difficulty
         currentParams = { ...currentParams, ...newParams }
-        navigate(`/recipes${buildQueryParams(currentParams)}`);
+
+        const query = buildQueryParams(currentParams);
+        navigate(`${location.pathname}${query}`);
     };
 
     const filterByCategory = (category) => {
@@ -64,7 +68,12 @@ const Header = () => {
                 return <Chip className='chip' key={cat._id} label={cat.description} sx={{ cursor: "pointer", backgroundColor: cat.description == params.get('category') && 'var(--primary-color)' }}
                     clickable onClick={() => { filterByCategory(cat) }}></Chip>;
             })}
-                <Chip className='chip' label='ביטול סינון' sx={{ cursor: "pointer" }} clickable onClick={() => { navigate('/recipes') }}></Chip>
+                <Chip className='chip'
+                    label='ביטול סינון'
+                    sx={{ cursor: "pointer" }}
+                    clickable
+                    onClick={() => navigate(location.pathname)}>
+                </Chip>
             </div>
             <div className="difficulty flex-center">
                 {
