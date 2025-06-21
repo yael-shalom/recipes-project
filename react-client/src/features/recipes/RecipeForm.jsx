@@ -90,7 +90,7 @@ export default function RecipeForm() {
 	// קטגוריות - בחירה מרשימה
 	const handleCategorySelect = (e) => {
 		const value = e.target.value;
-		if (value && !form.categories.includes(value)) {
+		if (value && !form.categories?.includes(value)) {
 			setForm({ ...form, categories: [...form.categories, value] });
 		}
 	};
@@ -98,7 +98,7 @@ export default function RecipeForm() {
 	// קטגוריות - הוספה חופשית
 	const handleAddCategory = () => {
 		const val = categoryInput.trim();
-		if (val && !form.categories.includes(val)) {
+		if (val && !form.categories?.includes(val)) {
 			setForm({ ...form, categories: [...form.categories, val] });
 			setCategoryInput("");
 		}
@@ -261,7 +261,7 @@ export default function RecipeForm() {
 							<MenuItem value="" disabled>
 								בחר מהרשימה
 							</MenuItem>
-							{categoriesNames.filter(opt => !form.categories.includes(opt)).map((opt) => (
+							{categoriesNames.filter(opt => !form.categories?.includes(opt)).map((opt) => (
 								<MenuItem key={opt} value={opt}>{opt}</MenuItem>
 							))}
 						</TextField>

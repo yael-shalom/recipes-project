@@ -27,7 +27,7 @@ const Recipes = ({ initialRecipes }) => {
         }
     }, [userId])
 
-    const filteredRecipes = recipesList?.filter(rec => rec.name.includes(search) && (!hasCategory || rec.categories.includes(category)) && (!hasDifficulty || getDifficulty(rec.difficulty) == difficulty));
+    const filteredRecipes = recipesList?.filter(rec => rec.name?.includes(search) && (!hasCategory || rec.categories?.includes(category)) && (!hasDifficulty || getDifficulty(rec.difficulty) == difficulty));
     return (<div className='recipes'>
         <div className='flex-col'>
             {status == "loading..." && <GradientCircularProgress />}
