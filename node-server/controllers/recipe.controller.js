@@ -7,6 +7,9 @@ const fs = require("fs/promises");
 const fileType = require('file-type');
 const { getAllUsers } = require("./user.controller");
 const { User } = require("../models/user.model");
+const { log } = require("console");
+const cloudinary = require('cloudinary').v2;
+
 
 //#
 exports.getAllRecipes = async (req, res, next) => {
@@ -105,17 +108,66 @@ exports.addRecipe = async (req, res, next) => {
                     req.body.imagUrl = req.file.filename;
                 }
 
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                // if (req.file) {
+                //     const result = await cloudinary.uploader.upload(req.file.path, {
+                //         public_id: 'new_image_name' // כאן תכניס את השם החדש שתרצה לתת לתמונה
+                //     });
+                //     req.body.imagUrl = result.secure_url; // שמור את ה-URL של התמונה
+                // }
+
+                // let imageData = { secure_url: undefined };
+                // let image = req.files ? req.files.imagUrl : null;
+                // const exts_arr = ['.png', '.jpg', '.jpeg', '.svg', '.gif'];
+                // if (image) {
+                //     if (image.size <= 1024 * 1024 * 2) {
+                //         let extFile = Path.extname(image.name);
+                //         if (exts_arr.includes(extFile)) {
+                //             imageData = await cloudinary.uploader.upload(image.tempFilePath, { unique_filename: true })
+                //             image.mv("public/" + image.name, (err) => {
+                //                 if (err)
+                //                     return res.status(401).json({ msg: "error", err })
+                //                 // res.json("file upload");
+                //             });
+                //         }
+                //         else {
+                //             res.status(400).json("file must be image, png, jpg, jpeg, svg, gif");
+                //         }
+                //     }
+                //     else {
+                //         res.status(400).json("file too big, maximum 2 mb");
+                //     }
+                // }
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
                 let recipe = new Recipe(req.body);
                 const user = await User.findById(req.user.user_id)
                 recipe.user = { name: user.username, _id: user._id }
 
                 await recipe.save();
 
+                let newCloudinaryPath = null;
+                if (req.file) {
+                    const result = await cloudinary.uploader.upload(req.file.path, {
+                        public_id: recipe._id // כאן תכניס את השם החדש שתרצה לתת לתמונה
+                    });
+                    newCloudinaryPath = result.secure_url; // שמור את ה-URL של התמונה
+                }
+
                 if (req.file) {
                     const newPath = req.file.path.replace(req.file.filename, recipe._id)
                     await fs.rename(req.file.path, newPath);
-                    recipe = await Recipe.findByIdAndUpdate(recipe._id, { imagUrl: path.basename(newPath) }, { new: true });
+                    recipe = await Recipe.findByIdAndUpdate(recipe._id, { imagUrl: newCloudinaryPath }, { new: true });
                 }
+
+                // if (req.file) {
+                //     const newPath = req.file.path.replace(req.file.filename, recipe._id)
+                //     await fs.rename(req.file.path, newPath);
+                //     recipe = await Recipe.findByIdAndUpdate(recipe._id, { imagUrl: path.basename(newPath) }, { new: true });
+                // }
 
                 if (categories) {
                     for (const element of categories) {
@@ -182,14 +234,37 @@ exports.updateRecipes = async (req, res, next) => {
                 const prevRecipe = await Recipe.findById(id)
                 if (!prevRecipe)
                     return next({ message: 'recipe not found' })
-                
+
+                // if (req.file) {
+                //     const newPath = req.file.path.replace(req.file.filename, prevRecipe._id)
+                //     await fs.rename(req.file.path, newPath);
+                //     req.body.imagUrl = path.basename(newPath);
+                // } else {
+                //     req.body.imagUrl = null;
+                // }
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
                 if (req.file) {
-                    const newPath = req.file.path.replace(req.file.filename, prevRecipe._id)
-                    await fs.rename(req.file.path, newPath);
-                    req.body.imagUrl = path.basename(newPath);
-                } else {
-                    req.body.imagUrl = null;
+                    const result = await cloudinary.uploader.upload(req.file.path, {
+                        public_id: prevRecipe._id // כאן תכניס את השם החדש שתרצה לתת לתמונה
+                    });
+                    req.body.imagUrl = result.secure_url; // שמור את ה-URL של התמונה
                 }
+                else {
+                    req.body.imagUrl = null;
+                    if (prevRecipe.imagUrl) {
+                        await cloudinary.uploader.destroy(prevRecipe._id);
+                    }
+                }
+
+                // if (req.file) {
+                //     const newPath = req.file.path.replace(req.file.filename, recipe._id)
+                //     await fs.rename(req.file.path, newPath);
+                //     recipe = await Recipe.findByIdAndUpdate(recipe._id, { imagUrl: newCloudinaryPath }, { new: true });
+                // }
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 const updatedRecipe = await Recipe.findByIdAndUpdate(
                     id,
@@ -269,6 +344,10 @@ exports.deleteRecipe = async (req, res, next) => {
             if (!rec)
                 return next({ message: 'recipe not found' })
 
+            if (rec.imagUrl) {
+                await cloudinary.uploader.destroy(rec._id);
+            }
+
             const categories = rec.categories;
             for (element of categories) {
 
@@ -314,6 +393,7 @@ const upload = multer({
         }
 
         const filePath = file.path;
+        log('File path: multer ', filePath);
         const fileBuffer = await fs.readFile(filePath); // קריאה אסינכרונית של הקובץ
         const type = await fileType.fromBuffer(fileBuffer);
 
@@ -324,3 +404,17 @@ const upload = multer({
         return cb(null, true);
     }
 }).single('image');
+
+// async function checkIfImage(filePath) {
+//     const fileBuffer = await fs.readFile(filePath); // קריאה אסינכרונית של הקובץ
+
+//     console.log('Checking file type for:', filePath);
+    
+//     console.log('File path:', filePath);
+//     const type = await fileType.fromBuffer(fileBuffer);
+//     if (type && type.mime.startsWith('image/')) {
+//         console.log('This is an image file:', type);
+//     } else {
+//         console.log('This is not an image file');
+//     }
+// }
