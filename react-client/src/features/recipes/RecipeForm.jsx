@@ -52,7 +52,8 @@ export default function RecipeForm() {
 		form.preparationInstruction = recipe.preparationInstruction
 		form.isPrivate = recipe.isPrivate
 		if (recipe.imagUrl) {
-			const imgFile = await downloadImageAsFile(`${import.meta.env.VITE_API_URL}/images/${recipe.imagUrl}`);
+			// const imgFile = await downloadImageAsFile(`${import.meta.env.VITE_API_URL}/images/${recipe.imagUrl}`);
+			const imgFile = await downloadImageAsFile(`${recipe.imagUrl}`);
 			setFile(imgFile);
 		}
 	}
