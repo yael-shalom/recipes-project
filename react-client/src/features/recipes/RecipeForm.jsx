@@ -40,12 +40,6 @@ export default function RecipeForm() {
 	const [showDialog, setShowDialog] = useState(false);
 	const [dialogText, setDialogText] = useState('');
 	const [dialogType, setDialogType] = useState(false);
-	// const {
-	//     register,
-	//     handleSubmit: handleDialogSubmit,
-	// } = useForm({
-	//     mode: 'onTouched'
-	// });
 
 	const navigate = useNavigate()
 
@@ -83,7 +77,6 @@ export default function RecipeForm() {
 		form.preparationInstruction = recipe.preparationInstruction
 		form.isPrivate = recipe.isPrivate
 		if (recipe.imagUrl) {
-			// const imgFile = await downloadImageAsFile(`${import.meta.env.VITE_API_URL}/images/${recipe.imagUrl}`);
 			const imgFile = await downloadImageAsFile(`${recipe.imagUrl}`);
 			setFile(imgFile);
 		}
@@ -279,8 +272,8 @@ export default function RecipeForm() {
 				boxShadow: '1px 1px 8px 2px #00000033'
 			}}
 		>
-			<Grid2 container spacing={2}>
-				<Grid2 item xs={12}>
+			<Grid2 container spacing={2} direction='column'>
+				<Grid2 gridColumn="span 12">
 					<CacheProvider value={cacheRtl}>
 						<div dir="rtl">
 							<TextField
@@ -296,7 +289,7 @@ export default function RecipeForm() {
 					</CacheProvider>
 				</Grid2>
 
-				<Grid2 item xs={12}>
+				<Grid2>
 					<CacheProvider value={cacheRtl}>
 						<div dir="rtl">
 							<TextField
@@ -313,7 +306,7 @@ export default function RecipeForm() {
 				</Grid2>
 
 				{/* קטגוריות */}
-				<Grid2 item xs={12}>
+				<Grid2 gridColumn="span 12">
 					<Typography fontWeight={500} fontSize="1rem" mb={1}>
 						קטגוריות
 					</Typography>
@@ -359,59 +352,48 @@ export default function RecipeForm() {
 					)}
 				</Grid2>
 
-				<Grid2 item xs={12} sm={4}>
+				<Box display="flex" alignItems="flex-start" mb={1} gap={1}>
 					<CacheProvider value={cacheRtl}>
-						<div dir="rtl">
-							<TextField
-								label="זמן הכנה (בדקות)"
-								name="preparationTime"
-								type="number"
-								value={form.preparationTime}
-								onChange={handleChange}
-								fullWidth
-								error={!!errors.preparationTime}
-								helperText={errors.preparationTime}
-							/>
-						</div>
-					</CacheProvider>
-				</Grid2>
-
-				<Grid2 item xs={12} sm={4}>
-					<CacheProvider value={cacheRtl}>
-						<div dir="rtl">
-							<TextField
-								label="דרגת קושי"
-								name="difficulty"
-								type="number"
-								value={form.difficulty}
-								onChange={handleChange}
-								fullWidth
-								error={!!errors.difficulty}
-								helperText={errors.difficulty}
-								sx={{ width: "200px" }}
-							/>
-						</div>
-					</CacheProvider>
-				</Grid2>
-
-				{!file && (
-					<Button
-						component="label"
-						role={undefined}
-						variant="contained"
-						tabIndex={-1}
-						startIcon={<CloudUploadIcon />}
-						sx={{ backgroundColor: "var(--primary-color)", height: "54px", direction: "ltr", position: "relative", top: "16px", left: "25px" }}
-					>
-						העלאת תמונה
-						<input
-							type="file"
-							onChange={handleFile}
-							style={{ display: 'none' }} // הסתר את הכניסה
-							multiple
+						<TextField
+							label="זמן הכנה (בדקות)"
+							name="preparationTime"
+							type="number"
+							value={form.preparationTime}
+							onChange={handleChange}
+							error={!!errors.preparationTime}
+							helperText={errors.preparationTime}
 						/>
-					</Button>
-				)}
+
+						<TextField
+							label="דרגת קושי"
+							name="difficulty"
+							type="number"
+							value={form.difficulty}
+							onChange={handleChange}
+							error={!!errors.difficulty}
+							helperText={errors.difficulty}
+						/>
+
+						{!file && (
+							<Button
+								component="label"
+								role={undefined}
+								variant="contained"
+								tabIndex={-1}
+								startIcon={<CloudUploadIcon />}
+								sx={{ backgroundColor: "var(--primary-color)", height: "54px" }}
+							>
+								העלאת תמונה
+								<input
+									type="file"
+									onChange={handleFile}
+									style={{ display: 'none' }} // הסתר את הכניסה
+									multiple
+								/>
+							</Button>
+						)}
+					</CacheProvider>
+				</Box>
 
 				{file && (
 					<Grid2 container className="image-container" style={{ marginTop: '16px' }} height={200} alignContent='center' justifyContent='right'>
@@ -430,7 +412,7 @@ export default function RecipeForm() {
 					</Grid2>
 				)}
 
-				<Grid2 item xs={12}>
+				<Grid2>
 					<Typography fontWeight={500} fontSize="1rem" mb={1}>
 						שכבות / חלקי מתכון
 					</Typography>
@@ -492,7 +474,7 @@ export default function RecipeForm() {
 				</Grid2>
 
 				{/* שלבי הכנה */}
-				<Grid2 item xs={12}>
+				<Grid2 gridColumn="span 12">
 					<Typography fontWeight={500} fontSize="1rem" mb={1}>
 						שלבי הכנה
 
@@ -532,7 +514,7 @@ export default function RecipeForm() {
 				</Grid2>
 
 				{/* פרטיות */}
-				<Grid2 item xs={12}>
+				<Grid2 gridColumn="span 12">
 					<FormControlLabel
 						control={
 							<Switch
@@ -546,7 +528,7 @@ export default function RecipeForm() {
 					/>
 				</Grid2>
 
-				<Grid2 item xs={12}>
+				<Grid2 gridColumn="span 12">
 					<Button
 						variant="contained"
 						type="submit"
