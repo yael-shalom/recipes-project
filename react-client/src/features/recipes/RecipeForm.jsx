@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-	Box, TextField, Button, Typography, Grid, Chip, IconButton, MenuItem, Switch, FormControlLabel, Rating,
-	Dialog,
+	Box, TextField, Button, Typography, Chip, IconButton, MenuItem, Switch, FormControlLabel, Dialog,
 	DialogActions,
 	DialogContent,
 	DialogTitle,
-	FormControl,
-	InputLabel,
-	Input,
-	FormHelperText,
-	TextareaAutosize,
 	Grid2
 } from '@mui/material';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
@@ -25,8 +19,7 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import CloseIcon from '@mui/icons-material/Close';
 import './RecipeForm.css'
-import { Upload, UploadFile, UploadFileOutlined, UploadFileSharp, UploadRounded, UploadTwoTone } from "@mui/icons-material";
-import { useForm } from "react-hook-form";
+import { UploadRounded } from "@mui/icons-material";
 
 
 const cacheRtl = createCache({
@@ -256,24 +249,21 @@ export default function RecipeForm() {
 				</CacheProvider>
 			</DialogContent>
 			<DialogActions>
-				{/* <Button onClick={onDialogSubmit} color="primary">
-					הוסף
-				</Button> */}
 				<Button
-						variant="contained"
-						onClick={onDialogSubmit}
-						fullWidth
-						sx={{
-							bgcolor: "var(--primary-color)",
-							color: "#fff",
-							fontWeight: 700,
-							fontSize: "1.09rem",
-							mt: 2,
-							"&:hover": { bgcolor: "#ff8270" },
-						}}
-					>
-						הוסף
-					</Button>
+					variant="contained"
+					onClick={onDialogSubmit}
+					fullWidth
+					sx={{
+						bgcolor: "var(--primary-color)",
+						color: "#fff",
+						fontWeight: 700,
+						fontSize: "1.09rem",
+						mt: 2,
+						"&:hover": { bgcolor: "#ff8270" },
+					}}
+				>
+					הוסף
+				</Button>
 			</DialogActions>
 		</Dialog>
 		<Box
@@ -289,8 +279,8 @@ export default function RecipeForm() {
 				boxShadow: '1px 1px 8px 2px #00000033'
 			}}
 		>
-			<Grid container spacing={2}>
-				<Grid item xs={12}>
+			<Grid2 container spacing={2}>
+				<Grid2 item xs={12}>
 					<CacheProvider value={cacheRtl}>
 						<div dir="rtl">
 							<TextField
@@ -304,9 +294,9 @@ export default function RecipeForm() {
 							/>
 						</div>
 					</CacheProvider>
-				</Grid>
+				</Grid2>
 
-				<Grid item xs={12}>
+				<Grid2 item xs={12}>
 					<CacheProvider value={cacheRtl}>
 						<div dir="rtl">
 							<TextField
@@ -320,10 +310,10 @@ export default function RecipeForm() {
 							/>
 						</div>
 					</CacheProvider>
-				</Grid>
+				</Grid2>
 
 				{/* קטגוריות */}
-				<Grid item xs={12}>
+				<Grid2 item xs={12}>
 					<Typography fontWeight={500} fontSize="1rem" mb={1}>
 						קטגוריות
 					</Typography>
@@ -367,9 +357,9 @@ export default function RecipeForm() {
 					{errors.categories && (
 						<Typography color="error" fontSize="0.9em">{errors.categories}</Typography>
 					)}
-				</Grid>
+				</Grid2>
 
-				<Grid item xs={12} sm={4}>
+				<Grid2 item xs={12} sm={4}>
 					<CacheProvider value={cacheRtl}>
 						<div dir="rtl">
 							<TextField
@@ -384,9 +374,9 @@ export default function RecipeForm() {
 							/>
 						</div>
 					</CacheProvider>
-				</Grid>
+				</Grid2>
 
-				<Grid item xs={12} sm={4}>
+				<Grid2 item xs={12} sm={4}>
 					<CacheProvider value={cacheRtl}>
 						<div dir="rtl">
 							<TextField
@@ -402,7 +392,7 @@ export default function RecipeForm() {
 							/>
 						</div>
 					</CacheProvider>
-				</Grid>
+				</Grid2>
 
 				{!file && (
 					<Button
@@ -424,7 +414,7 @@ export default function RecipeForm() {
 				)}
 
 				{file && (
-					<Grid container className="image-container" style={{ marginTop: '16px' }} height={200} alignContent='center' justifyContent='right'>
+					<Grid2 container className="image-container" style={{ marginTop: '16px' }} height={200} alignContent='center' justifyContent='right'>
 						<img
 							src={URL.createObjectURL(file)}
 							alt="Uploaded"
@@ -437,10 +427,10 @@ export default function RecipeForm() {
 						>
 							<CloseIcon />
 						</IconButton>
-					</Grid>
+					</Grid2>
 				)}
 
-				<Grid item xs={12}>
+				<Grid2 item xs={12}>
 					<Typography fontWeight={500} fontSize="1rem" mb={1}>
 						שכבות / חלקי מתכון
 					</Typography>
@@ -499,10 +489,10 @@ export default function RecipeForm() {
 					{errors.layersArray && (
 						<Typography color="error" fontSize="0.9em">{errors.layersArray}</Typography>
 					)}
-				</Grid>
+				</Grid2>
 
 				{/* שלבי הכנה */}
-				<Grid item xs={12}>
+				<Grid2 item xs={12}>
 					<Typography fontWeight={500} fontSize="1rem" mb={1}>
 						שלבי הכנה
 
@@ -539,10 +529,10 @@ export default function RecipeForm() {
 					{errors.preparationInstruction && (
 						<Typography color="error" fontSize="0.9em">{errors.preparationInstruction}</Typography>
 					)}
-				</Grid>
+				</Grid2>
 
 				{/* פרטיות */}
-				<Grid item xs={12}>
+				<Grid2 item xs={12}>
 					<FormControlLabel
 						control={
 							<Switch
@@ -554,9 +544,9 @@ export default function RecipeForm() {
 						label="הפוך את המתכון לפרטי"
 						sx={{ mr: 1 }}
 					/>
-				</Grid>
+				</Grid2>
 
-				<Grid item xs={12}>
+				<Grid2 item xs={12}>
 					<Button
 						variant="contained"
 						type="submit"
@@ -572,8 +562,8 @@ export default function RecipeForm() {
 					>
 						שמור מתכון
 					</Button>
-				</Grid>
-			</Grid>
+				</Grid2>
+			</Grid2>
 		</Box>
 	</>);
 }
