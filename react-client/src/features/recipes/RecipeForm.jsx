@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import {
-	Box, TextField, Button, Typography, Grid, Chip, IconButton, MenuItem, Switch, FormControlLabel, Rating
+	Box, TextField, Button, Typography, Grid, Chip, IconButton, MenuItem, Switch, FormControlLabel, Rating,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
+	FormControl,
+	InputLabel,
+	Input,
+	FormHelperText,
+	TextareaAutosize,
+	Grid2
 } from '@mui/material';
 import AddCircleOutline from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutline from '@mui/icons-material/RemoveCircleOutline';
 import { addRecipe, updateRecipe } from "./recipeSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { getAllCategories } from "../categories/categorySlice";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,6 +25,8 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import CloseIcon from '@mui/icons-material/Close';
 import './RecipeForm.css'
+import { Upload, UploadFile, UploadFileOutlined, UploadFileSharp, UploadRounded, UploadTwoTone } from "@mui/icons-material";
+import { useForm } from "react-hook-form";
 
 
 const cacheRtl = createCache({
@@ -32,6 +43,17 @@ export default function RecipeForm() {
 	const formData = new FormData();
 	const { id } = useParams();
 	const [file, setFile] = useState(null);
+
+	const [showDialog, setShowDialog] = useState(false);
+	const [dialogText, setDialogText] = useState('');
+	const [dialogType, setDialogType] = useState(false);
+	// const {
+	//     register,
+	//     handleSubmit: handleDialogSubmit,
+	// } = useForm({
+	//     mode: 'onTouched'
+	// });
+
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -40,6 +62,22 @@ export default function RecipeForm() {
 			insertExistsValues()
 
 	}, [dispatch], id)
+
+	const openDialog = () => {
+		setShowDialog(true);
+	};
+
+	const onDialogSubmit = (event) => {
+		event.preventDefault();
+
+		const newLines = dialogText.split('\n').filter(x => x.trim() !== '');
+		setForm({
+			...form,
+			preparationInstruction: [...form.preparationInstruction, ...newLines]
+		});
+		setDialogText('');
+		setShowDialog(false);
+	}
 
 	const insertExistsValues = async () => {
 		const recipe = recipes.find(rec => rec._id == id)
@@ -198,7 +236,46 @@ export default function RecipeForm() {
 		return file;
 	};
 
-	return (
+	return (<>
+		<Dialog fullWidth open={showDialog} onClose={() => setShowDialog(false)}>
+			<DialogTitle>הקש את שלבי ההכנה</DialogTitle>
+			<DialogContent>
+				<CacheProvider value={cacheRtl}>
+					<div dir="rtl">
+						<TextField
+							id="text"
+							label="שלבי הכנה"
+							multiline
+							rows={12}
+							variant="outlined"
+							fullWidth
+							onChange={ev => setDialogText(ev.target.value)}
+							sx={{ marginTop: '5px' }}
+						/>
+					</div>
+				</CacheProvider>
+			</DialogContent>
+			<DialogActions>
+				{/* <Button onClick={onDialogSubmit} color="primary">
+					הוסף
+				</Button> */}
+				<Button
+						variant="contained"
+						onClick={onDialogSubmit}
+						fullWidth
+						sx={{
+							bgcolor: "var(--primary-color)",
+							color: "#fff",
+							fontWeight: 700,
+							fontSize: "1.09rem",
+							mt: 2,
+							"&:hover": { bgcolor: "#ff8270" },
+						}}
+					>
+						הוסף
+					</Button>
+			</DialogActions>
+		</Dialog>
 		<Box
 			component="form"
 			onSubmit={handleSubmit}
@@ -428,6 +505,10 @@ export default function RecipeForm() {
 				<Grid item xs={12}>
 					<Typography fontWeight={500} fontSize="1rem" mb={1}>
 						שלבי הכנה
+
+						<IconButton onClick={openDialog}>
+							<UploadRounded />
+						</IconButton>
 					</Typography>
 					{form.preparationInstruction.map((step, i) => (
 						<Box key={i} display="flex" alignItems="center" mb={1}>
@@ -486,7 +567,7 @@ export default function RecipeForm() {
 							fontWeight: 700,
 							fontSize: "1.09rem",
 							mt: 2,
-							"&:hover": { bgcolor: "#ff7a8b" }
+							"&:hover": { bgcolor: "#ff8270" }
 						}}
 					>
 						שמור מתכון
@@ -494,5 +575,5 @@ export default function RecipeForm() {
 				</Grid>
 			</Grid>
 		</Box>
-	);
+	</>);
 }
