@@ -2,30 +2,32 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import './Recipes.css';
 import GradientCircularProgress from '../common/GradientProgress'
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import SingleRecipe from './SingleRecipe';
 import { getDifficulty } from './recipesService';
 
 const Recipes = ({ initialRecipes }) => {
-    const userId = useParams();
-    const params = new URLSearchParams(location.hash.split('?')[1]);
+    const { id: ownerId } = useParams();
+    const location = useLocation();
+    const [searchParams] = useSearchParams();
+
     const [recipesList, setRecipesList] = useState(initialRecipes)
     const status = useSelector((state) => state.recipes.status);
-    const search = params.get('search') ? params.get('search') : '';
-    const category = params.get('category')
-    const difficulty = params.get('difficulty')
+    const search = searchParams.get('search') ? searchParams.get('search') : '';
+    const category = searchParams.get('category')
+    const difficulty = searchParams.get('difficulty')
     const hasDifficulty = difficulty ? true : false
     const hasCategory = category ? true : false
 
 
     useEffect(() => {
-        if (userId.id != undefined) {
-            setRecipesList(initialRecipes.filter(rec => rec.user._id == userId.id));
+        if (ownerId != undefined) {
+            setRecipesList(initialRecipes.filter(rec => rec.user._id == ownerId));
         }
         else {
             setRecipesList(initialRecipes)
         }
-    }, [userId])
+    }, [ownerId, initialRecipes]);
 
     const filteredRecipes = recipesList?.filter(rec => rec.name?.includes(search) && (!hasCategory || rec.categories?.includes(category)) && (!hasDifficulty || getDifficulty(rec.difficulty) == difficulty));
     return (<div className='recipes'>
