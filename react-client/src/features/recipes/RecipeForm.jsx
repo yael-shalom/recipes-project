@@ -48,7 +48,7 @@ export default function RecipeForm() {
 		if (id)
 			insertExistsValues()
 
-	}, [dispatch], id)
+	}, [dispatch, id])
 
 	const openDialog = () => {
 		setShowDialog(true);
