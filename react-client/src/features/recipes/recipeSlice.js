@@ -10,9 +10,8 @@ const checkTokenExpiration = () => {
 };
 
 export const getAllRecipes = createAsyncThunk("recipe-getAll", async () => {
-    // try {
     const currentUser = JSON.parse(localStorage.getItem(`currentUser`));
-    let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/getallrecipes`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/getallrecipes`, {
         method: `GET`,
         headers: {
             Authorization: `Bearer ` + currentUser?.token
@@ -27,50 +26,61 @@ export const getAllRecipes = createAsyncThunk("recipe-getAll", async () => {
 })
 
 export const getRecipesByUser = createAsyncThunk("recipe-getByUser", async (id) => {
-    let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/getRecipesByUser/` + id)
-    res = await res.json()
-    return res
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/getRecipesByUser/` + id)
+    const data = await res.json();
+
+    if (!res.ok)
+        throw new Error(data);
+    return data;
 })
 
 export const addRecipe = createAsyncThunk("recipe-add", async (formData) => {
-    try {
-        const currentUser = JSON.parse(localStorage.getItem(`currentUser`));
-        let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/addRecipe`, {
-            method: `POST`,
-            headers: {
-                Authorization: `Bearer ` + currentUser.token
-            },
-            body: formData
-        })
-        res = await res.json()
-        return res;
+    const currentUser = JSON.parse(localStorage.getItem(`currentUser`));
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/addRecipe`, {
+        method: `POST`,
+        headers: {
+            Authorization: `Bearer ` + currentUser.token
+        },
+        body: formData
+    })
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data);
     }
-    catch (error) {
-        throw error;
-    }
+
+    return data;
 })
 
 export const updateRecipe = createAsyncThunk("recipe-update", async ({ formData, id }) => {
     const currentUser = JSON.parse(localStorage.getItem(`currentUser`));
-    let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/updateRecipes/${id}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/updateRecipes/${id}`, {
         method: `PUT`,
         headers: {
             Authorization: `Bearer ` + currentUser.token
         },
         body: formData
     })
-    res = await res.json()
-    return res;
+
+    const data = await res.json();
+
+    if (!res.ok)
+        throw new Error(data);
+    return data;
 })
 
 export const deleteRecipe = createAsyncThunk("recipe-delete", async (id) => {
     const currentUser = JSON.parse(localStorage.getItem(`currentUser`));
-    let res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/deleteRecipe/${id}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/recipes/deleteRecipe/${id}`, {
         method: `DELETE`,
         headers: {
             Authorization: `Bearer ` + currentUser.token
         }
     })
+
+    if (!res.ok)
+        throw new Error(data);
+
     return id;
 })
 
