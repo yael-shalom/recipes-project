@@ -1,8 +1,4 @@
-import { CacheProvider } from "@emotion/react";
-import { Button, Grid2, Paper, TextField } from "@mui/material";
-import rtlPlugin from '@mui/stylis-plugin-rtl';
-import { prefixer } from 'stylis';
-import createCache from '@emotion/cache';
+import { Button, Grid2, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
@@ -12,12 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, login, setStatus } from "./userSlice";
 import { getAllRecipes } from "../recipes/recipeSlice";
-
-
-const cacheRtl = createCache({
-    key: 'muirtl',
-    stylisPlugins: [prefixer, rtlPlugin],
-});
 
 const Login = () => {
 
@@ -74,9 +64,8 @@ const Login = () => {
                 <h2>{condition == 'login' ? 'כניסה' : 'הרשמה'}</h2>
                 <Grid2 container spacing={2} sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                     {condition == 'register' &&
-                        <Grid2 >
-                            <CacheProvider value={cacheRtl}>
-                                <div dir="rtl">
+                        <Grid2>
+                                <div>
                                     <TextField
                                         label="שם משתמש"
                                         {...register("username")}
@@ -85,12 +74,10 @@ const Login = () => {
                                         helperText={errors.username?.message}
                                     />
                                 </div>
-                            </CacheProvider>
                         </Grid2>
                     }
-                    <Grid2 >
-                        <CacheProvider value={cacheRtl}>
-                            <div dir="rtl">
+                    <Grid2>
+                            <div>
                                 <TextField
                                     label='דוא"ל'
                                     {...register("email")}
@@ -99,11 +86,9 @@ const Login = () => {
                                     helperText={errors.email?.message}
                                 />
                             </div>
-                        </CacheProvider>
                     </Grid2>
-                    <Grid2 >
-                        <CacheProvider value={cacheRtl}>
-                            <div dir="rtl">
+                    <Grid2>
+                            <div>
                                 <TextField
                                     label="סיסמא"
                                     type="password"
@@ -113,7 +98,6 @@ const Login = () => {
                                     helperText={errors.password?.message}
                                 />
                             </div>
-                        </CacheProvider>
                     </Grid2>
                     <Grid2 >
                         <Button variant="contained" type="submit" fullWidth sx={{ backgroundColor: '#ff9b8ca6', fontSize: "larger" }}>

@@ -11,6 +11,17 @@ import { getAllRecipes } from '../recipes/recipeSlice'
 import { useEffect } from 'react'
 import Login from '../users/Login'
 import { getAllCategories } from '../categories/categorySlice'
+import rtlPlugin from '@mui/stylis-plugin-rtl';
+import { prefixer } from 'stylis';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+
+
+const cacheRtl = createCache({
+	key: 'muirtl',
+	stylisPlugins: [prefixer, rtlPlugin],
+});
+
 
 function App() {
 	const dispatch = useDispatch();
@@ -30,17 +41,19 @@ function App() {
 
 	return (
 		<>
-			<Navbar />
-			<Routes>
-				<Route path='/' element={withHeader(<Home />)}></Route >
-				{/* <Route path='/register' element={<Register />}></Route> */}
-				<Route path='/recipes' element={withHeader(<Recipes initialRecipes={allRecipes} />)}></Route>
-				<Route path='recipes/owner/:id' element={withHeader(<Recipes initialRecipes={allRecipes} />)}></Route>
-				<Route path='/add' element={<RecipeForm />}></Route>
-				<Route path='/update/:id' element={<RecipeForm />}></Route>
-				<Route path='/recipes/:id' element={<ShowRecipe />}></Route>
-				<Route path='/login' element={<Login />}></Route>
-			</Routes >
+			<CacheProvider value={cacheRtl}>
+				<Navbar />
+				<Routes>
+					<Route path='/' element={withHeader(<Home />)}></Route >
+					{/* <Route path='/register' element={<Register />}></Route> */}
+					<Route path='/recipes' element={withHeader(<Recipes initialRecipes={allRecipes} />)}></Route>
+					<Route path='recipes/owner/:id' element={withHeader(<Recipes initialRecipes={allRecipes} />)}></Route>
+					<Route path='/add' element={<RecipeForm />}></Route>
+					<Route path='/update/:id' element={<RecipeForm />}></Route>
+					<Route path='/recipes/:id' element={<ShowRecipe />}></Route>
+					<Route path='/login' element={<Login />}></Route>
+				</Routes >
+			</CacheProvider >
 		</>
 	)
 }

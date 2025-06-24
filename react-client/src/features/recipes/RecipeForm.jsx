@@ -13,19 +13,10 @@ import { useDispatch, useSelector } from "react-redux";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { getAllCategories } from "../categories/categorySlice";
 import { useNavigate, useParams } from "react-router-dom";
-import rtlPlugin from '@mui/stylis-plugin-rtl';
-import { prefixer } from 'stylis';
-import { CacheProvider } from '@emotion/react';
-import createCache from '@emotion/cache';
 import CloseIcon from '@mui/icons-material/Close';
 import './RecipeForm.css'
 import { UploadRounded } from "@mui/icons-material";
 
-
-const cacheRtl = createCache({
-	key: 'muirtl',
-	stylisPlugins: [prefixer, rtlPlugin],
-});
 
 export default function RecipeForm() {
 	const dispatch = useDispatch()
@@ -226,20 +217,18 @@ export default function RecipeForm() {
 		<Dialog fullWidth open={showDialog} onClose={() => setShowDialog(false)}>
 			<DialogTitle>הקש את שלבי ההכנה</DialogTitle>
 			<DialogContent>
-				<CacheProvider value={cacheRtl}>
-					<div dir="rtl">
-						<TextField
-							id="text"
-							label="שלבי הכנה"
-							multiline
-							rows={12}
-							variant="outlined"
-							fullWidth
-							onChange={ev => setDialogText(ev.target.value)}
-							sx={{ marginTop: '5px' }}
-						/>
-					</div>
-				</CacheProvider>
+				<div>
+					<TextField
+						id="text"
+						label="שלבי הכנה"
+						multiline
+						rows={12}
+						variant="outlined"
+						fullWidth
+						onChange={ev => setDialogText(ev.target.value)}
+						sx={{ marginTop: '5px' }}
+					/>
+				</div>
 			</DialogContent>
 			<DialogActions>
 				<Button
@@ -274,35 +263,31 @@ export default function RecipeForm() {
 		>
 			<Grid2 container spacing={2} direction='column'>
 				<Grid2 gridColumn="span 12">
-					<CacheProvider value={cacheRtl}>
-						<div dir="rtl">
-							<TextField
-								label="שם המתכון"
-								name="name"
-								value={form.name}
-								onChange={handleChange}
-								fullWidth
-								error={!!errors.name}
-								helperText={errors.name}
-							/>
-						</div>
-					</CacheProvider>
+					<div>
+						<TextField
+							label="שם המתכון"
+							name="name"
+							value={form.name}
+							onChange={handleChange}
+							fullWidth
+							error={!!errors.name}
+							helperText={errors.name}
+						/>
+					</div>
 				</Grid2>
 
 				<Grid2>
-					<CacheProvider value={cacheRtl}>
-						<div dir="rtl">
-							<TextField
-								label="תיאור כללי"
-								name="description"
-								value={form.description}
-								onChange={handleChange}
-								fullWidth
-								multiline
-								minRows={2}
-							/>
-						</div>
-					</CacheProvider>
+					<div>
+						<TextField
+							label="תיאור כללי"
+							name="description"
+							value={form.description}
+							onChange={handleChange}
+							fullWidth
+							multiline
+							minRows={2}
+						/>
+					</div>
 				</Grid2>
 
 				{/* קטגוריות */}
@@ -353,50 +338,48 @@ export default function RecipeForm() {
 				</Grid2>
 
 				<Box display="flex" alignItems="flex-start" mb={1} gap={1}>
-					<CacheProvider value={cacheRtl}>
-						<TextField
-							label="זמן הכנה (בדקות)"
-							name="preparationTime"
-							type="number"
-							value={form.preparationTime}
-							onChange={handleChange}
-							error={!!errors.preparationTime}
-							helperText={errors.preparationTime}
-						/>
+					<TextField
+						label="זמן הכנה (בדקות)"
+						name="preparationTime"
+						type="number"
+						value={form.preparationTime}
+						onChange={handleChange}
+						error={!!errors.preparationTime}
+						helperText={errors.preparationTime}
+					/>
 
-						<TextField
-							label="דרגת קושי"
-							name="difficulty"
-							type="number"
-							value={form.difficulty}
-							onChange={handleChange}
-							error={!!errors.difficulty}
-							helperText={errors.difficulty}
-						/>
+					<TextField
+						label="דרגת קושי"
+						name="difficulty"
+						type="number"
+						value={form.difficulty}
+						onChange={handleChange}
+						error={!!errors.difficulty}
+						helperText={errors.difficulty}
+					/>
 
-						{!file && (
-							<Button
-								component="label"
-								role={undefined}
-								variant="contained"
-								tabIndex={-1}
-								startIcon={<CloudUploadIcon />}
-								sx={{ backgroundColor: "var(--primary-color)", height: "54px" }}
-							>
-								העלאת תמונה
-								<input
-									type="file"
-									onChange={handleFile}
-									style={{ display: 'none' }} // הסתר את הכניסה
-									multiple
-								/>
-							</Button>
-						)}
-					</CacheProvider>
+					{!file && (
+						<Button
+							component="label"
+							role={undefined}
+							variant="contained"
+							tabIndex={-1}
+							startIcon={<CloudUploadIcon />}
+							sx={{ backgroundColor: "var(--primary-color)", height: "54px" }}
+						>
+							העלאת תמונה
+							<input
+								type="file"
+								onChange={handleFile}
+								style={{ display: 'none' }} // הסתר את הכניסה
+								multiple
+							/>
+						</Button>
+					)}
 				</Box>
 
 				{file && (
-					<Grid2 container className="image-container" style={{ marginTop: '16px' }} height={200} alignContent='center' justifyContent='right'>
+					<Grid2 container className="image-container" style={{ marginTop: '16px' }} height={200} alignContent='center' justifyContent='flex-start'>
 						<img
 							src={URL.createObjectURL(file)}
 							alt="Uploaded"
@@ -419,17 +402,15 @@ export default function RecipeForm() {
 					{form.layersArray.map((layer, layerIdx) => (
 						<Box key={layerIdx} mb={2} p={2} sx={{ border: "1px solid #eee", borderRadius: 2, background: "#fff9f7" }}>
 							<Box display="flex" alignItems="center" mb={1}>
-								<CacheProvider value={cacheRtl}>
-									<div dir="rtl">
-										<TextField
-											label={`תיאור שכבה ${layerIdx + 1}`}
-											value={layer.description}
-											onChange={e => handleLayerDescription(layerIdx, e.target.value)}
-											fullWidth
-											sx={{ mr: 2, width: "600px" }}
-										/>
-									</div>
-								</CacheProvider>
+								<div>
+									<TextField
+										label={`תיאור שכבה ${layerIdx + 1}`}
+										value={layer.description}
+										onChange={e => handleLayerDescription(layerIdx, e.target.value)}
+										fullWidth
+										sx={{ mr: 2, width: "600px" }}
+									/>
+								</div>
 								{form.layersArray.length > 1 && (
 									<IconButton onClick={() => removeLayer(layerIdx)} color="error" size="small">
 										<RemoveCircleOutline />
@@ -443,17 +424,15 @@ export default function RecipeForm() {
 							</Box>
 							{layer.ingredients.map((ing, ingIdx) => (
 								<Box key={ingIdx} display="flex" alignItems="center" mb={1}>
-									<CacheProvider value={cacheRtl}>
-										<div dir="rtl">
-											<TextField
-												label={`רכיב ${ingIdx + 1}`}
-												value={ing}
-												onChange={e => handleLayerIngredient(layerIdx, ingIdx, e.target.value)}
-												fullWidth
-												sx={{ width: "580px" }}
-											/>
-										</div>
-									</CacheProvider>
+									<div>
+										<TextField
+											label={`רכיב ${ingIdx + 1}`}
+											value={ing}
+											onChange={e => handleLayerIngredient(layerIdx, ingIdx, e.target.value)}
+											fullWidth
+											sx={{ width: "580px" }}
+										/>
+									</div>
 									{layer.ingredients.length > 1 && (
 										<IconButton onClick={() => removeLayerIngredient(layerIdx, ingIdx)} color="error" size="small">
 											<RemoveCircleOutline />
@@ -484,18 +463,16 @@ export default function RecipeForm() {
 					</Typography>
 					{form.preparationInstruction.map((step, i) => (
 						<Box key={i} display="flex" alignItems="center" mb={1}>
-							<CacheProvider value={cacheRtl}>
-								<div dir="rtl">
-									<TextField
-										label={`שלב ${i + 1}`}
-										value={step}
-										onChange={e => handlePreparationChange(i, e.target.value)}
-										fullWidth
-										sx={{ width: "620px" }}
-										error={!!errors.preparationInstruction && !step}
-									/>
-								</div>
-							</CacheProvider>
+							<div>
+								<TextField
+									label={`שלב ${i + 1}`}
+									value={step}
+									onChange={e => handlePreparationChange(i, e.target.value)}
+									fullWidth
+									sx={{ width: "620px" }}
+									error={!!errors.preparationInstruction && !step}
+								/>
+							</div>
 							{form.preparationInstruction.length > 1 && (
 								<IconButton onClick={() => removePreparationStep(i)} color="error" size="small">
 									<RemoveCircleOutline />
