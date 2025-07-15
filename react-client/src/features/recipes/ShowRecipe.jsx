@@ -63,7 +63,7 @@ const ShowRecipe = () => {
 	return (
 		<Grid2 container direction="column" className='show-recipe' sx={{ justifyContent: "center", alignItems: "center" }}>
 			<Grid2>
-				<PrintIcon className='no-print' onClick={() => { window.print(); }} sx={{ cursor: "pointer", position: "fixed", left: "15px", top: '20px', zIndex: '1000' }} />
+				<PrintIcon className='no-print' onClick={() => { window.print(); }} sx={{ cursor: "pointer", position: "fixed", insetInlineEnd: "15px", top: '20px', zIndex: '1000' }} />
 				{/* <div className="overlay" style={{ backgroundImage: `url(${import.meta.env.VITE_API_URL}/images/${recipe?.imagUrl})`, height: height }}></div> */}
 				<div className="overlay" style={{ backgroundImage: `url(${recipe?.imagUrl})`, height: height }}></div>
 				<div ref={headerRef}>
@@ -88,7 +88,7 @@ const ShowRecipe = () => {
 										style={{ textAlign: 'right', cursor: 'pointer', textDecorationLine: layersArrayCheck[indexL]?.[indexI] ? 'line-through' : 'none' }}
 										onClick={() => changeState(indexL, indexI)}
 									>
-										<CheckIcon sx={{ width: '20px', marginLeft: '8px' }} />
+										<CheckIcon sx={{ width: '20px', marginInlineEnd: '8px' }} />
 										<ListItemText primary={`${ingredient}`} />
 									</ListItem>
 								))}
