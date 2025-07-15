@@ -117,29 +117,6 @@ exports.addRecipe = async (req, res, next) => {
                 //     req.body.imagUrl = result.secure_url; // שמור את ה-URL של התמונה
                 // }
 
-                // let imageData = { secure_url: undefined };
-                // let image = req.files ? req.files.imagUrl : null;
-                // const exts_arr = ['.png', '.jpg', '.jpeg', '.svg', '.gif'];
-                // if (image) {
-                //     if (image.size <= 1024 * 1024 * 2) {
-                //         let extFile = Path.extname(image.name);
-                //         if (exts_arr.includes(extFile)) {
-                //             imageData = await cloudinary.uploader.upload(image.tempFilePath, { unique_filename: true })
-                //             image.mv("public/" + image.name, (err) => {
-                //                 if (err)
-                //                     return res.status(401).json({ msg: "error", err })
-                //                 // res.json("file upload");
-                //             });
-                //         }
-                //         else {
-                //             res.status(400).json("file must be image, png, jpg, jpeg, svg, gif");
-                //         }
-                //     }
-                //     else {
-                //         res.status(400).json("file too big, maximum 2 mb");
-                //     }
-                // }
-
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -350,21 +327,16 @@ exports.deleteRecipe = async (req, res, next) => {
 
             const categories = rec.categories;
             for (element of categories) {
-
                 const cat = await Categories.findOne({ description: element });
                 if (cat) {
                     if (cat.recipes.length == 1) {
                         await Categories.findByIdAndDelete(cat._id)
                     }
                     else {
-                        cat.recipes.filter(x => x._id != rec._id)
+                        cat.recipes = cat.recipes.filter(x => x._id != rec._id)
                         await cat.save();
                     }
-
                 }
-
-
-
             }
 
             await Recipe.findByIdAndDelete(id)
