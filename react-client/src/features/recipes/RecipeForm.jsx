@@ -290,31 +290,27 @@ export default function RecipeForm() {
 		>
 			<Grid2 container spacing={2} direction='column'>
 				<Grid2 gridColumn="span 12">
-					<div>
-						<TextField
-							label="שם המתכון"
-							name="name"
-							value={form.name}
-							onChange={handleChange}
-							fullWidth
-							error={!!errors.name}
-							helperText={errors.name}
-						/>
-					</div>
+					<TextField
+						label="שם המתכון"
+						name="name"
+						value={form.name}
+						onChange={handleChange}
+						fullWidth
+						error={!!errors.name}
+						helperText={errors.name}
+					/>
 				</Grid2>
 
 				<Grid2>
-					<div>
-						<TextField
-							label="תיאור כללי"
-							name="description"
-							value={form.description}
-							onChange={handleChange}
-							fullWidth
-							multiline
-							minRows={2}
-						/>
-					</div>
+					<TextField
+						label="תיאור כללי"
+						name="description"
+						value={form.description}
+						onChange={handleChange}
+						fullWidth
+						multiline
+						minRows={2}
+					/>
 				</Grid2>
 
 				{/* קטגוריות */}
@@ -322,33 +318,39 @@ export default function RecipeForm() {
 					<Typography fontWeight={500} fontSize="1rem" mb={1}>
 						קטגוריות
 					</Typography>
-					<Box display="flex" alignItems="center" mb={1} gap={1}>
-						<TextField
-							select
-							label="בחר קטגוריה"
-							value=""
-							onChange={handleCategorySelect}
-							sx={{ minWidth: 160, flexDirection: "column" }}
-						>
-							<MenuItem value="" disabled>
-								בחר מהרשימה
-							</MenuItem>
-							{categoriesNames.filter(opt => !form.categories?.includes(opt)).map((opt) => (
-								<MenuItem key={opt} value={opt}>{opt}</MenuItem>
-							))}
-						</TextField>
-						<TextField
-							label="הוסף קטגוריה חדשה"
-							value={categoryInput}
-							onChange={e => setCategoryInput(e.target.value)}
-							onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddCategory(); } }}
-							sx={{ minWidth: 160 }}
-						/>
-						<IconButton onClick={handleAddCategory} color="primary">
-							<AddCircleOutline />
-						</IconButton>
-					</Box>
-					<Box mb={1}>
+					<Grid2 container spacing={1} alignItems="center">
+						<Grid2>
+							<TextField
+								select
+								label="בחר קטגוריה"
+								value=""
+								onChange={handleCategorySelect}
+								sx={{ minWidth: 160 }}
+							>
+								<MenuItem value="" disabled>
+									בחר מהרשימה
+								</MenuItem>
+								{categoriesNames.filter(opt => !form.categories?.includes(opt)).map((opt) => (
+									<MenuItem key={opt} value={opt}>{opt}</MenuItem>
+								))}
+							</TextField>
+						</Grid2>
+						<Grid2>
+							<TextField
+								label="הוסף קטגוריה חדשה"
+								value={categoryInput}
+								onChange={e => setCategoryInput(e.target.value)}
+								onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddCategory(); } }}
+								sx={{ minWidth: 160 }}
+							/>
+						</Grid2>
+						<Grid2>
+							<IconButton onClick={handleAddCategory} color="primary">
+								<AddCircleOutline />
+							</IconButton>
+						</Grid2>
+					</Grid2>
+					<Grid2 mb={1}>
 						{form.categories.map((cat, i) => (
 							<Chip
 								key={cat}
@@ -358,60 +360,71 @@ export default function RecipeForm() {
 								sx={{ bgcolor: "var(--primary-color)", color: "#fff", fontWeight: 600, mr: 1, mb: 1, direction: "ltr" }}
 							/>
 						))}
-					</Box>
+					</Grid2>
 					{errors.categories && (
 						<Typography color="error" fontSize="0.9em">{errors.categories}</Typography>
 					)}
 				</Grid2>
 
-				<Grid2 spacing={2} container>
-					{/* <Box display="flex" alignItems="flex-start" mb={1} gap={1}> */}
-					<TextField
-						label="זמן הכנה (בדקות)"
-						name="preparationTime"
-						type="number"
-						value={form.preparationTime}
-						onChange={handleChange}
-						error={!!errors.preparationTime}
-						helperText={errors.preparationTime}
-					/>
+				<Grid2 container spacing={2}>
+					<Grid2>
+						<TextField
+							label="זמן הכנה (בדקות)"
+							name="preparationTime"
+							type="number"
+							value={form.preparationTime}
+							onChange={handleChange}
+							error={!!errors.preparationTime}
+							helperText={errors.preparationTime}
+						/>
+					</Grid2>
 
-					<TextField
-						label="דרגת קושי"
-						name="difficulty"
-						type="number"
-						value={form.difficulty}
-						onChange={handleChange}
-						error={!!errors.difficulty}
-						helperText={errors.difficulty}
-					/>
+					<Grid2>
+						<TextField
+							label="דרגת קושי"
+							name="difficulty"
+							type="number"
+							value={form.difficulty}
+							onChange={handleChange}
+							error={!!errors.difficulty}
+							helperText={errors.difficulty}
+						/>
+					</Grid2>
+				</Grid2>
 
-					{!file && (<>
-						<Button
-							component="label"
-							role={undefined}
-							variant="contained"
-							tabIndex={-1}
-							startIcon={<CloudUploadIcon />}
-							sx={{ backgroundColor: "var(--primary-color)", height: "54px" }}
-						>
-							העלאת תמונה
-							<input
-								type="file"
-								onChange={handleFile}
-								style={{ display: 'none' }} // הסתר את הכניסה
-								multiple
-							/>
-						</Button>
-						<Button
-							onClick={handlePasteImageUrl}
-							variant="contained"
-							sx={{ backgroundColor: "var(--primary-color)", height: "54px" }}
-						>
-							הדבק כתובת URL
-						</Button>
-					</>)}
-					{/* </Box> */}
+				{/* כפתורי העלאת תמונה בשורה חדשה */}
+				<Grid2 container spacing={2} mt={2}>
+					{!file && (
+						<>
+							<Grid2>
+								<Button
+									component="label"
+									role={undefined}
+									variant="contained"
+									tabIndex={-1}
+									startIcon={<CloudUploadIcon />}
+									sx={{ backgroundColor: "var(--primary-color)", height: "54px" }}
+								>
+									העלאת תמונה
+									<input
+										type="file"
+										onChange={handleFile}
+										style={{ display: 'none' }} // הסתר את הכניסה
+										multiple
+									/>
+								</Button>
+							</Grid2>
+							<Grid2>
+								<Button
+									onClick={handlePasteImageUrl}
+									variant="contained"
+									sx={{ backgroundColor: "var(--primary-color)", height: "54px" }}
+								>
+									הדבק כתובת URL
+								</Button>
+							</Grid2>
+						</>
+					)}
 				</Grid2>
 
 				{file && (
@@ -437,8 +450,8 @@ export default function RecipeForm() {
 					</Typography>
 					{form.layersArray.map((layer, layerIdx) => (
 						<Box key={layerIdx} mb={2} p={2} sx={{ border: "1px solid #eee", borderRadius: 2, background: "#fff9f7" }}>
-							<Box display="flex" alignItems="center" mb={1}>
-								<div>
+							<Grid2 container alignItems="center" mb={1}>
+								<Grid2>
 									<TextField
 										label={`תיאור שכבה ${layerIdx + 1}`}
 										value={layer.description}
@@ -446,21 +459,25 @@ export default function RecipeForm() {
 										fullWidth
 										sx={{ mr: 2, width: "600px" }}
 									/>
-								</div>
+								</Grid2>
 								{form.layersArray.length > 1 && (
-									<IconButton onClick={() => removeLayer(layerIdx)} color="error" size="small">
-										<RemoveCircleOutline />
-									</IconButton>
+									<Grid2>
+										<IconButton onClick={() => removeLayer(layerIdx)} color="error" size="small">
+											<RemoveCircleOutline />
+										</IconButton>
+									</Grid2>
 								)}
 								{layerIdx === form.layersArray.length - 1 && (
-									<IconButton onClick={addLayer} color="primary" size="small">
-										<AddCircleOutline />
-									</IconButton>
+									<Grid2>
+										<IconButton onClick={addLayer} color="primary" size="small">
+											<AddCircleOutline />
+										</IconButton>
+									</Grid2>
 								)}
-							</Box>
+							</Grid2>
 							{layer.ingredients.map((ing, ingIdx) => (
-								<Box key={ingIdx} display="flex" alignItems="center" mb={1}>
-									<div>
+								<Grid2 key={ingIdx} container alignItems="center" mb={1}>
+									<Grid2>
 										<TextField
 											label={`רכיב ${ingIdx + 1}`}
 											value={ing}
@@ -468,18 +485,22 @@ export default function RecipeForm() {
 											fullWidth
 											sx={{ width: "580px" }}
 										/>
-									</div>
+									</Grid2>
 									{layer.ingredients.length > 1 && (
-										<IconButton onClick={() => removeLayerIngredient(layerIdx, ingIdx)} color="error" size="small">
-											<RemoveCircleOutline />
-										</IconButton>
+										<Grid2>
+											<IconButton onClick={() => removeLayerIngredient(layerIdx, ingIdx)} color="error" size="small">
+												<RemoveCircleOutline />
+											</IconButton>
+										</Grid2>
 									)}
 									{ingIdx === layer.ingredients.length - 1 && (
-										<IconButton onClick={() => addLayerIngredient(layerIdx)} color="primary" size="small">
-											<AddCircleOutline />
-										</IconButton>
+										<Grid2>
+											<IconButton onClick={() => addLayerIngredient(layerIdx)} color="primary" size="small">
+												<AddCircleOutline />
+											</IconButton>
+										</Grid2>
 									)}
-								</Box>
+								</Grid2>
 							))}
 						</Box>
 					))}
@@ -492,14 +513,13 @@ export default function RecipeForm() {
 				<Grid2 gridColumn="span 12">
 					<Typography fontWeight={500} fontSize="1rem" mb={1}>
 						שלבי הכנה
-
 						<IconButton onClick={openDialog}>
 							<UploadRounded />
 						</IconButton>
 					</Typography>
 					{form.preparationInstruction.map((step, i) => (
-						<Box key={i} display="flex" alignItems="center" mb={1}>
-							<div>
+						<Grid2 key={i} container alignItems="center" mb={1}>
+							<Grid2>
 								<TextField
 									label={`שלב ${i + 1}`}
 									value={step}
@@ -508,18 +528,22 @@ export default function RecipeForm() {
 									sx={{ width: "620px" }}
 									error={!!errors.preparationInstruction && !step}
 								/>
-							</div>
+							</Grid2>
 							{form.preparationInstruction.length > 1 && (
-								<IconButton onClick={() => removePreparationStep(i)} color="error" size="small">
-									<RemoveCircleOutline />
-								</IconButton>
+								<Grid2>
+									<IconButton onClick={() => removePreparationStep(i)} color="error" size="small">
+										<RemoveCircleOutline />
+									</IconButton>
+								</Grid2>
 							)}
 							{i === form.preparationInstruction.length - 1 && (
-								<IconButton onClick={addPreparationStep} color="primary" size="small">
-									<AddCircleOutline />
-								</IconButton>
+								<Grid2>
+									<IconButton onClick={addPreparationStep} color="primary" size="small">
+										<AddCircleOutline />
+									</IconButton>
+								</Grid2>
 							)}
-						</Box>
+						</Grid2>
 					))}
 					{errors.preparationInstruction && (
 						<Typography color="error" fontSize="0.9em">{errors.preparationInstruction}</Typography>
@@ -558,7 +582,7 @@ export default function RecipeForm() {
 						שמור מתכון
 					</Button>
 				</Grid2>
-			</Grid2 >
-		</Box >
+			</Grid2>
+		</Box>
 	</>);
 }
