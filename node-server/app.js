@@ -6,6 +6,7 @@ const cors = require('cors');
 const userRouter = require('./routes/user.route')
 const recipesRouter = require('./routes/recipe.route')
 const categoriesRouter = require('./routes/categories.route')
+const proxyRouter = require('./routes/proxy.route');
 
 const { pageNotFound, serverErrors } = require('./middlewares/handleErrors')
 require('dotenv').config();
@@ -38,8 +39,11 @@ app.use('/images', express.static('images'));
 app.use('/users', userRouter);
 app.use('/recipes', recipesRouter);
 app.use('/categories', categoriesRouter)
+app.use('/proxy', proxyRouter);
+
 app.use(pageNotFound);
 app.use(serverErrors);
+
 const port = process.env.PORT;
 app.listen(port, () => {
     console.log("running at http://localhost:" + port);
