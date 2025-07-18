@@ -12,8 +12,7 @@ const NotFound = () => {
         alignItems: 'center',
         justifyContent: 'center',
         height: 'calc(100vh - 62px)',
-        background: 'black'
-        // background: 'linear-gradient(135deg, #fffbe6 0%, #ffe0b2 100%)',
+        background: 'linear-gradient(135deg, #fffbe6 0%, #ffe0b2 100%)',
       }}
     >
       <Paper
