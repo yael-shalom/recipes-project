@@ -5,6 +5,7 @@ import RecipeForm from '../recipes/RecipeForm'
 import { Route, Routes } from 'react-router-dom'
 import Navbar from './Navbar'
 import ShowRecipe from '../recipes/ShowRecipe'
+import NotFound from './NotFound';
 import Header from './Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllRecipes } from '../recipes/recipeSlice'
@@ -52,6 +53,7 @@ function App() {
 					<Route path='/update/:id' element={<RecipeForm />}></Route>
 					<Route path='/recipes/:id' element={<ShowRecipe />}></Route>
 					<Route path='/login' element={<Login />}></Route>
+					<Route path="*" element={<NotFound />} />
 				</Routes >
 			</CacheProvider >
 		</>
