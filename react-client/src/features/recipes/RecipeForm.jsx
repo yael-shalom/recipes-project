@@ -86,11 +86,38 @@ export default function RecipeForm() {
 
 	const [errors, setErrors] = useState({});
 	const [categoryInput, setCategoryInput] = useState("");
+	const [imageUrl, setImageUrl] = useState("");
 
 	const handleFile = (event) => {
 		const selectedFile = event.target.files[0];
 		setFile(selectedFile);
 	}
+
+	const handlePasteImageUrl = async () => {
+		try {
+			const text = await navigator.clipboard.readText();
+			setImageUrl(text);
+			const proxyUrl = `${import.meta.env.VITE_API_URL}/proxy?url=${encodeURIComponent(text)}`;
+			const file = await downloadImageAsFile(proxyUrl);
+			setFile(file);
+		} catch (err) {
+			console.error('Failed to read clipboard contents: ', err);
+		}
+	};
+
+	const handleImageUrlChange = (event) => {
+		setImageUrl(event.target.value);
+	};
+
+	const handleImageUrlSubmit = () => {
+		if (imageUrl) {
+			const proxyUrl = `${import.meta.env.VITE_API_URL}/proxy?url=${encodeURIComponent(imageUrl)}`;
+			downloadImageAsFile(proxyUrl).then(file => {
+				setFile(file);
+				setImageUrl(""); // לנקות את השדה אחרי שהקובץ נוסף
+			});
+		}
+	};
 
 	const removeFile = () => {
 		setFile(null);
@@ -291,7 +318,7 @@ export default function RecipeForm() {
 				</Grid2>
 
 				{/* קטגוריות */}
-				<Grid2 gridColumn="span 12">
+				<Grid2>
 					<Typography fontWeight={500} fontSize="1rem" mb={1}>
 						קטגוריות
 					</Typography>
@@ -337,7 +364,8 @@ export default function RecipeForm() {
 					)}
 				</Grid2>
 
-				<Box display="flex" alignItems="flex-start" mb={1} gap={1}>
+				<Grid2 spacing={2} container>
+					{/* <Box display="flex" alignItems="flex-start" mb={1} gap={1}> */}
 					<TextField
 						label="זמן הכנה (בדקות)"
 						name="preparationTime"
@@ -358,7 +386,7 @@ export default function RecipeForm() {
 						helperText={errors.difficulty}
 					/>
 
-					{!file && (
+					{!file && (<>
 						<Button
 							component="label"
 							role={undefined}
@@ -375,8 +403,16 @@ export default function RecipeForm() {
 								multiple
 							/>
 						</Button>
-					)}
-				</Box>
+						<Button
+							onClick={handlePasteImageUrl}
+							variant="contained"
+							sx={{ backgroundColor: "var(--primary-color)", height: "54px" }}
+						>
+							הדבק כתובת URL
+						</Button>
+					</>)}
+					{/* </Box> */}
+				</Grid2>
 
 				{file && (
 					<Grid2 container className="image-container" style={{ marginTop: '16px' }} height={200} alignContent='center' justifyContent='flex-start'>
@@ -522,7 +558,7 @@ export default function RecipeForm() {
 						שמור מתכון
 					</Button>
 				</Grid2>
-			</Grid2>
-		</Box>
+			</Grid2 >
+		</Box >
 	</>);
 }
