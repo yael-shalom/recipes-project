@@ -1,12 +1,8 @@
-import React from 'react';
 import { Box, Typography, Button, Paper } from '@mui/material';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 
-const getPrimaryColor = () =>
-  getComputedStyle(document.documentElement).getPropertyValue('--primary-color') ;
-
 const NotFound = () => {
-  const primaryColor = getPrimaryColor().trim();
+  const primaryColor = 'var(--primary-color)';
 
   return (
     <Box
@@ -15,8 +11,9 @@ const NotFound = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '60vh',
-        background: 'linear-gradient(135deg, #fffbe6 0%, #ffe0b2 100%)',
+        height: 'calc(100vh - 62px)',
+        background: 'black'
+        // background: 'linear-gradient(135deg, #fffbe6 0%, #ffe0b2 100%)',
       }}
     >
       <Paper
