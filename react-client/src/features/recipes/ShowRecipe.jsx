@@ -9,7 +9,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
-import { getAllRecipes } from './recipeSlice';
+import { deleteRecipe, getAllRecipes } from './recipeSlice';
 import { getDifficulty, minutesToHours } from './recipesService';
 
 const ShowRecipe = () => {
@@ -64,7 +64,6 @@ const ShowRecipe = () => {
 		<Grid2 container direction="column" className='show-recipe' sx={{ justifyContent: "center", alignItems: "center" }}>
 			<Grid2>
 				<PrintIcon className='no-print' onClick={() => { window.print(); }} sx={{ cursor: "pointer", position: "fixed", insetInlineEnd: "15px", top: '20px', zIndex: '1000' }} />
-				{/* <div className="overlay" style={{ backgroundImage: `url(${import.meta.env.VITE_API_URL}/images/${recipe?.imagUrl})`, height: height }}></div> */}
 				<div className="overlay" style={{ backgroundImage: `url(${recipe?.imagUrl})`, height: height }}></div>
 				<div ref={headerRef}>
 					<h1>{recipe?.name}</h1>
