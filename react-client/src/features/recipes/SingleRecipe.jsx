@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card, CardActions, CardContent, CardMedia, Typography, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
@@ -7,14 +8,23 @@ import { Link, useNavigate } from 'react-router-dom';
 import './SingleRecipe.css'
 import { Button, Chip } from '@mui/material';
 import { getDifficulty, minutesToHours } from './recipesService';
+import ConfirmDeleteDialog from '../common/ConfirmDeleteDialog';
 
 export default function SingleRecipe({ recipe }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.users.currentUser)
+  const [openDialog, setOpenDialog] = useState(false);
 
   const deleteHandler = () => {
-    dispatch(deleteRecipe(recipe._id))
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => setOpenDialog(false);
+
+  const handleConfirmDelete = () => {
+    dispatch(deleteRecipe(recipe._id));
+    setOpenDialog(false);
   };
 
   const editHandler = () => {
@@ -28,7 +38,7 @@ export default function SingleRecipe({ recipe }) {
     >
       <Box>
         <CardMedia
-          sx={{ height: 140,  backgroundSize: !recipe.imagUrl ? "contain" : "cover" }}
+          sx={{ height: 140, backgroundSize: !recipe.imagUrl ? "contain" : "cover" }}
           title={recipe.name}
           // image={recipe.imagUrl ? `${import.meta.env.VITE_API_URL}/images/${recipe.imagUrl}` : '/default-image.svg'}
           image={recipe.imagUrl ? `${recipe.imagUrl}` : '/default-image.svg'}
@@ -66,6 +76,12 @@ export default function SingleRecipe({ recipe }) {
           />
         }
       </CardActions>
+      <ConfirmDeleteDialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        onConfirm={handleConfirmDelete}
+        recipeName={recipe.name}
+      />
     </Card>
   );
 }

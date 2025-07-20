@@ -11,6 +11,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import { deleteRecipe, getAllRecipes } from './recipeSlice';
 import { getDifficulty, minutesToHours } from './recipesService';
+import ConfirmDeleteDialog from '../common/ConfirmDeleteDialog';
 
 const ShowRecipe = () => {
 	const { id } = useParams();
@@ -23,6 +24,7 @@ const ShowRecipe = () => {
 	const dispatch = useDispatch();
 	const [layersArrayCheck, setLayersArrayCheck] = useState([]);
 	const [instructionsArray, setInstructionsArray] = useState(new Array(recipe?.preparationInstruction.length).fill(false))
+	const [openDialog, setOpenDialog] = useState(false);
 
 	useEffect(() => {
 		setHeight(headerRef.current.offsetTop + headerRef.current.offsetHeight);
@@ -40,8 +42,11 @@ const ShowRecipe = () => {
 		}
 	}, [recipe]);
 
-	const deleteHandler = () => {
+	const deleteHandler = () => setOpenDialog(true);
+	const handleDialogClose = () => setOpenDialog(false);
+	const handleConfirmDelete = () => {
 		dispatch(deleteRecipe(recipe._id));
+		setOpenDialog(false);
 	};
 
 	const editHandler = () => {
@@ -99,7 +104,7 @@ const ShowRecipe = () => {
 				<List className="instructions">
 					{recipe?.preparationInstruction.map((instruction, index) => (
 						<ListItem key={index} style={{ textAlign: 'right', cursor: 'pointer', textDecorationLine: instructionsArray[index] ? 'line-through' : 'none' }}
-							onClick={()=>changeInstructionState(index)}>
+							onClick={() => changeInstructionState(index)}>
 							<ListItemText primary={`${index + 1}. ${instruction}`} />
 						</ListItem>
 					))}
@@ -111,6 +116,12 @@ const ShowRecipe = () => {
 					<EditNoteRoundedIcon className='no-print' onClick={editHandler} fontSize='large' sx={{ cursor: 'pointer', color: 'black' }} />
 				</Grid2>}
 			</Grid2>
+			<ConfirmDeleteDialog
+				open={openDialog}
+				onClose={handleDialogClose}
+				onConfirm={handleConfirmDelete}
+				recipeName={recipe?.name}
+			/>
 		</Grid2>
 	);
 }
