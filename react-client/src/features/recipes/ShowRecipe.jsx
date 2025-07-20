@@ -36,6 +36,11 @@ const ShowRecipe = () => {
 	}, []);
 
 	useEffect(() => {
+		if (!recipe) {
+			navigate(-1);
+			return;
+		}
+
 		if (recipe?.layersArray) {
 			const initialLayersCheck = recipe.layersArray.map(layer => new Array(layer.ingredients.length).fill(false));
 			setLayersArrayCheck(initialLayersCheck);
