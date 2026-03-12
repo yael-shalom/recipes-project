@@ -55,7 +55,7 @@ const Header = () => {
             >
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
-                    placeholder="מה תרצו להכין היום?"
+                    placeholder="מה תרצו להכין היום???"
                     inputProps={{ 'aria-label': 'search recipe' }}
                     onInput={(event) => searchByName(event)}
                 />
